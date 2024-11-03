@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 7e099cfb170801642b8225a110ffdb7e
   - enabled: 1
-    path: Assets/Scenes/DreamLand.unity
+    path: Assets/Scenes/Jangada no Oceano.unity
     guid: ff7acc184a4bcb145b35eff685176d31
   m_configObjects: {}
