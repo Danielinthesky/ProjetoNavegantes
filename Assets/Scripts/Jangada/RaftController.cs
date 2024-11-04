@@ -6,14 +6,14 @@ public class RaftController : MonoBehaviour
     public float velocidadeMaxima = 5.0f;
     public float aceleracao = 1.0f;
     public float inerciaRotacao = 0.95f;
-    public float velocidadeRotacao = 2.0f;      // Velocidade de rotação da jangada
-    public float suavidadeRotacao = 0.1f;       // Controla a suavidade da rotação
-    public float limiteRotacao = 30.0f;         // Limite da velocidade angular
+    public float velocidadeRotacao = 2.0f;      
+    public float suavidadeRotacao = 0.1f;       
+    public float limiteRotacao = 30.0f;         
     private bool estaMovendo = false;
     private Rigidbody rb;
     private float velocidadeAtual = 0.0f;
     private float velocidadeRotacaoAtual = 0.0f;
-    public ParticleSystem dust;
+    public ParticleSystem poeira;
 
     void Start()
     {
@@ -22,21 +22,21 @@ public class RaftController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Movimento linear da jangada
+        // Movimento da jangada
         float velocidadeAlvo = estaMovendo ? velocidadeMaxima : 0.0f;
         velocidadeAtual = Mathf.Lerp(velocidadeAtual, velocidadeAlvo, aceleracao * Time.deltaTime);
 
         if (estaMovendo)
         {
             rb.AddForce(-transform.right * velocidadeAtual, ForceMode.Acceleration);
-            if (!dust.isPlaying) dust.Play();
+            if (!poeira.isPlaying) poeira.Play();
         }
-        else if (dust.isPlaying)
+        else if (poeira.isPlaying)
         {
-            dust.Stop();
+            poeira.Stop();
         }
 
-        // Aplica rotação com inércia e limita a velocidade angular
+        // Rotaçao com inercia e limita a velocidade angular
         if (Mathf.Abs(velocidadeRotacaoAtual) > 0.01f)
         {
             // Limita a velocidade angular do Rigidbody diretamente
@@ -46,7 +46,7 @@ public class RaftController : MonoBehaviour
         }
     }
 
-    // Método para aplicar rotação suavemente à jangada com limite
+    // Aplicar rotaçao suavemente a jangada com limite
     public void AplicarRotacao(float rotacaoInput)
     {
         float alvoRotacao = rotacaoInput * velocidadeRotacao;
@@ -56,7 +56,7 @@ public class RaftController : MonoBehaviour
     public void AlternarMovimento()
     {
         estaMovendo = !estaMovendo;
-        if (estaMovendo) dust.Play(); else dust.Stop();
+        if (estaMovendo) poeira.Play(); else poeira.Stop();
         Debug.Log("Movimento da jangada: " + (estaMovendo ? "Ligado" : "Desligado"));
     }
 }

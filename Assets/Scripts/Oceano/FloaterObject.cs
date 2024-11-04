@@ -3,71 +3,78 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [RequireComponent(typeof(Rigidbody))]
 
 public class FloaterObject : MonoBehaviour
 {
-    public Transform[] floaters;
-    public float underWaterDrag = 3f;
-    public float angularWaterDrag = 1f;
-    public float airDrag = 0f;
-    public float airAngularDrag = 0.05f;
-    public float floatingPower = 15f;
-    public float waterHeight = 0f;
-    public int floatersUnderwater;
-    bool underWater;
     
-    OceanManager oceanManager;
-    Rigidbody rb;
+    public Transform[] pontosFlutuantes;
+    public float arrastoSubmerso = 3f; 
+    public float arrastoAngularSubmerso = 1f; 
+    public float arrastoNoAr = 0f; 
+    public float arrastoAngularNoAr = 0.05f; 
+    public float forcaDeFlutuacao = 15f; 
+    public float alturaDaAgua = 0f; 
+    public int pontosSubmersos; 
+    bool estaSubmerso; 
 
-    // Start is called before the first frame update
+    OceanManager gerenciadorDoOceano; 
+    Rigidbody rb; 
+   
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        oceanManager = GetComponent<OceanManager>();
+        gerenciadorDoOceano = GetComponent<OceanManager>();
     }
 
-    // Update is called once per frame
+    
     void FixedUpdate()
     {
-        floatersUnderwater = 0;
-        for (int i = 0; i < floaters.Length; i++)
-        {
-            float difference = floaters[i].position.y - oceanManager.WaterHeightAtPosition(floaters[i].position);
+        pontosSubmersos = 0; 
 
-            if (difference < 0)
+        
+        for (int i = 0; i < pontosFlutuantes.Length; i++)
+        {
+            // Calcula a diferença entre a posição do ponto de flutuação e a altura da agua
+            float diferenca = pontosFlutuantes[i].position.y - gerenciadorDoOceano.WaterHeightAtPosition(pontosFlutuantes[i].position);
+
+            // Se o ponto está abaixo da superfície da água.
+            if (diferenca < 0)
             {
-                rb.AddForceAtPosition(Vector3.up * floatingPower * Math.Abs(difference), floaters[i].position, ForceMode.Force);
-                floatersUnderwater += 1;
-                if (!underWater)
+                // Aplica uma força de flutuação no ponto específico.
+                rb.AddForceAtPosition(Vector3.up * forcaDeFlutuacao * Math.Abs(diferenca), pontosFlutuantes[i].position, ForceMode.Force);
+                pontosSubmersos += 1;
+
+                
+                if (!estaSubmerso)
                 {
-                    underWater = true;
-                    SwitchState(true);
+                    estaSubmerso = true;
+                    AlterarEstado(true);
                 }
             }
 
-            if (underWater && floatersUnderwater == 0)
+            // Se o objeto estava submerso e todos os pontos saíram da agua
+            if (estaSubmerso && pontosSubmersos == 0)
             {
-                underWater = false;
-                SwitchState(false);
+                estaSubmerso = false;
+                AlterarEstado(false);
             }
         }
-
     }
 
-    void SwitchState(bool isUnderwater)
+    // Altera o estado do arrasto do Rigidbody dependendo se esta submerso ou nao
+    void AlterarEstado(bool embaixoDAgua)
     {
-        if (isUnderwater)
+        if (embaixoDAgua)
         {
-            rb.drag = underWaterDrag;
-            rb.angularDrag = angularWaterDrag;
+            rb.drag = arrastoSubmerso;
+            rb.angularDrag = arrastoAngularSubmerso;
         }
         else
         {
-            rb.drag = airDrag;
-            rb.angularDrag = airAngularDrag;
+            rb.drag = arrastoNoAr;
+            rb.angularDrag = arrastoAngularNoAr;
         }
     }
-
-
 }
