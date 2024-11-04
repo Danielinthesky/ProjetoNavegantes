@@ -97,7 +97,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Altura_da_Onda: 0.03
+    - _Altura_da_Onda: 0.02
     - _Altura_da_Superficie: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1

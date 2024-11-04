@@ -13,7 +13,7 @@ public class RaftController : MonoBehaviour
     private Rigidbody rb;
     private float velocidadeAtual = 0.0f;
     private float velocidadeRotacaoAtual = 0.0f;
-    public ParticleSystem poeira;
+    public ParticleSystem rastroMovimento;
 
     void Start()
     {
@@ -29,11 +29,11 @@ public class RaftController : MonoBehaviour
         if (estaMovendo)
         {
             rb.AddForce(-transform.right * velocidadeAtual, ForceMode.Acceleration);
-            if (!poeira.isPlaying) poeira.Play();
+            if (!rastroMovimento.isPlaying) rastroMovimento.Play();
         }
-        else if (poeira.isPlaying)
+        else if (rastroMovimento.isPlaying)
         {
-            poeira.Stop();
+            rastroMovimento.Stop();
         }
 
         // Rotaçao com inercia e limita a velocidade angular
@@ -56,7 +56,7 @@ public class RaftController : MonoBehaviour
     public void AlternarMovimento()
     {
         estaMovendo = !estaMovendo;
-        if (estaMovendo) poeira.Play(); else poeira.Stop();
+        if (estaMovendo) rastroMovimento.Play(); else rastroMovimento.Stop();
         Debug.Log("Movimento da jangada: " + (estaMovendo ? "Ligado" : "Desligado"));
     }
 }

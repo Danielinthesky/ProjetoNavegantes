@@ -1,55 +1,55 @@
-// using UnityEngine;
-// using UnityEngine.EventSystems;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
-// public class DirectJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
-// {
-//     public RectTransform background;
-//     public RectTransform handle;
-//     public RaftController boatController;
+public class DirectJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
+{
+    public RectTransform fundo;
+    public RectTransform alavanca;
+    public RaftController controladorJangada;
 
-//     private Vector2 initialPosition;
-//     public float joystickSensitivity = 1.0f;
-//     private float dpiScaleFactor;
-//     public bool isDragging { get; private set; } // Propriedade pública para verificar o estado de arrasto
+    private Vector2 posicaoInicial;
+    public float sensibilidadeJoystick = 1.0f;
+    private float fatorEscalaDpi;
+    public bool estaArrastando { get; private set; }
 
-//     void Start()
-//     {
-//         initialPosition = handle.anchoredPosition;
+    void Start()
+    {
+        posicaoInicial = alavanca.anchoredPosition;
 
-//         dpiScaleFactor = Screen.dpi / 160f;
-//         if (dpiScaleFactor == 0)
-//         {
-//             dpiScaleFactor = 1;
-//         }
-//     }
+        fatorEscalaDpi = Screen.dpi / 160f;
+        if (fatorEscalaDpi == 0)
+        {
+            fatorEscalaDpi = 1;
+        }
+    }
 
-//     public void OnDrag(PointerEventData eventData)
-//     {
-//         isDragging = true; // Define como arrastando quando começa a interação
+    public void OnDrag(PointerEventData eventData)
+    {
+        estaArrastando = true;
 
-//         Vector2 position = Vector2.zero;
-//         RectTransformUtility.ScreenPointToLocalPointInRectangle(background, eventData.position, eventData.pressEventCamera, out position);
+        Vector2 posicao = Vector2.zero;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(fundo, eventData.position, eventData.pressEventCamera, out posicao);
 
-//         position *= joystickSensitivity / dpiScaleFactor;
-//         float clampedX = Mathf.Clamp(position.x, -background.rect.width / 2, background.rect.width / 2);
-//         handle.anchoredPosition = new Vector2(clampedX, initialPosition.y);
+        posicao *= sensibilidadeJoystick / fatorEscalaDpi;
+        float clampedX = Mathf.Clamp(posicao.x, -fundo.rect.width / 2, fundo.rect.width / 2);
+        alavanca.anchoredPosition = new Vector2(clampedX, posicaoInicial.y);
 
-//         float normalizedValue = clampedX / (background.rect.width / 2);
+        float valorNormalizado = clampedX / (fundo.rect.width / 2);
 
-//         if (boatController != null)
-//         {
-//             boatController.DefinirEntradaJoystick(normalizedValue);
-//         }
-//     }
+        if (controladorJangada != null)
+        {
+            // controladorJangada.DefinirEntradaJoystick(valorNormalizado);
+        }
+    }
 
-//     public void OnEndDrag(PointerEventData eventData)
-//     {
-//         isDragging = false; // Define como não arrastando quando o toque termina
-//         handle.anchoredPosition = initialPosition;
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        estaArrastando = false;
+        alavanca.anchoredPosition = posicaoInicial;
 
-//         if (boatController != null)
-//         {
-//             boatController.DefinirEntradaJoystick(0);
-//         }
-//     }
-// }
+        if (controladorJangada != null)
+        {
+            // controladorJangada.DefinirEntradaJoystick(0);
+        }
+    }
+}

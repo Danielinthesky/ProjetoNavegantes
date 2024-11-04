@@ -4,14 +4,14 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     // Método para carregar uma cena pelo nome
-    public void LoadSceneByName(string sceneName)
+    public void CarregarCenaPorNome(string nomeCena)
     {
-        SceneManager.LoadScene("DreamLand");
+        SceneManager.LoadScene("Jangada no Oceano");
     }
 
     // Método para carregar uma cena pelo índice (opcional)
-    public void LoadSceneByIndex(int sceneIndex)
+    public void CarregarCenaPorIndice(int indiceCena)
     {
-        SceneManager.LoadScene(sceneIndex);
+        SceneManager.LoadScene(indiceCena);
     }
 }

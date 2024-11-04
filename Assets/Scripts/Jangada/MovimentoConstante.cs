@@ -4,45 +4,35 @@ using UnityEngine;
 
 public class MovimentoConstante : MonoBehaviour
 {
-
-    private Vector3 passiveDirection;
+    private Vector3 direcaoPassiva;
     OceanManager oceanManager;
     Rigidbody rb;
 
-    private float nextDirectionChangeTime;
-    public float currentSpeed = 0.1f;         // Intensidade da correnteza (ajustada para ser mais leve)
-    public float currentChangeInterval = 5.0f; // Intervalo de mudança de direção da correnteza
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    private float proximoTempoDeMudancaDeDirecao;
+    public float velocidadeAtual = 0.1f;         // Intensidade da correnteza 
+    public float intervaloDeMudancaDeCorrenteza = 5.0f; 
     void Update()
     {
-                ApplyPassiveMovement();
-
+        AplicarMovimentoPassivo();
     }
 
-        void ApplyPassiveMovement()
+    void AplicarMovimentoPassivo()
     {
-        if (Time.time >= nextDirectionChangeTime)
+        if (Time.time >= proximoTempoDeMudancaDeDirecao)
         {
-            SetRandomPassiveDirection();
-            nextDirectionChangeTime = Time.time + currentChangeInterval;
+            DefinirDirecaoPassivaAleatoria();
+            proximoTempoDeMudancaDeDirecao = Time.time + intervaloDeMudancaDeCorrenteza;
         }
 
-        Vector3 currentForce = passiveDirection * currentSpeed;
-        float waveOffset = Mathf.Sin(Time.time * oceanManager.wavesFrequency) * oceanManager.wavesHeight;
-        Vector3 waveForce = new Vector3(0, waveOffset, 0);
+        Vector3 forcaAtual = direcaoPassiva * velocidadeAtual;
+        float deslocamentoOnda = Mathf.Sin(Time.time * oceanManager.frequenciaDasOndas) * oceanManager.alturaDasOndas;
+        Vector3 forcaDaOnda = new Vector3(0, deslocamentoOnda, 0);
 
-        rb.AddForce(currentForce + waveForce, ForceMode.Acceleration);
+        rb.AddForce(forcaAtual + forcaDaOnda, ForceMode.Acceleration);
     }
 
-    void SetRandomPassiveDirection()
+    void DefinirDirecaoPassivaAleatoria()
     {
-        passiveDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
+        direcaoPassiva = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
     }
 }

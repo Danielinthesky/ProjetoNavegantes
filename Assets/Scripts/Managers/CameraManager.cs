@@ -4,97 +4,98 @@ using Cinemachine;
 
 public class CameraManager : MonoBehaviour
 {
-    public CinemachineFreeLook freeLookCamera;    // Referência à câmera Cinemachine FreeLook
-    public Button toggleRecenteringButton;        // Botão para ativar/desativar o recentramento
-    public float swipeSensitivityX = 0.2f;
-    public float swipeSensitivityY = 0.2f;
-    public RaftController raftController;         // Referência ao controlador da jangada
+    public CinemachineFreeLook cameraFreeLook;    
+    public Button botaoAlternarRecentramento;     
+    public float sensibilidadeDeslizeX = 0.2f;
+    public float sensibilidadeDeslizeY = 0.2f;
+    public RaftController controladorJangada;     
 
-    private bool isRecenteringEnabled = true;     // Estado atual do recentramento
-    private Vector2 lastTouchPosition;
-    private bool isDragging = false;
+    private bool recentramentoAtivo = true;       
+    private Vector2 ultimaPosicaoToque;
+    private bool estaArrastando = false;
 
     void Start()
     {
-        toggleRecenteringButton.onClick.RemoveAllListeners();
-        toggleRecenteringButton.onClick.AddListener(ToggleRecentering);
-        EnableRecentering();  // Inicializa com o recentramento ativado
+        botaoAlternarRecentramento.onClick.RemoveAllListeners();
+        botaoAlternarRecentramento.onClick.AddListener(AlternarRecentramento);
+        AtivarRecentramento(); 
     }
 
     void Update()
     {
         if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0);
+            Touch toque = Input.GetTouch(0);
 
-            if (touch.phase == TouchPhase.Began)
+            if (toque.phase == TouchPhase.Began)
             {
-                isDragging = true;
-                lastTouchPosition = touch.position;
+                estaArrastando = true;
+                ultimaPosicaoToque = toque.position;
 
-                // Bloqueia a rotação da câmera para ambos os eixos se o recentramento estiver ativo
-                if (isRecenteringEnabled)
+                // Bloqueia a rotaçao da camera para ambos os eixos se o recentramento estiver ativo
+                if (recentramentoAtivo)
                 {
-                    freeLookCamera.m_XAxis.m_InputAxisName = ""; // Desativa o input do eixo X
-                    freeLookCamera.m_YAxis.m_InputAxisName = ""; // Desativa o input do eixo Y
+                    // Desativa o input do eixo X e Y
+                    cameraFreeLook.m_XAxis.m_InputAxisName = ""; 
+                    cameraFreeLook.m_YAxis.m_InputAxisName = ""; 
                 }
             }
-            else if (touch.phase == TouchPhase.Moved && isDragging)
+            else if (toque.phase == TouchPhase.Moved && estaArrastando)
             {
-                Vector2 delta = touch.position - lastTouchPosition;
-                lastTouchPosition = touch.position;
+                Vector2 delta = toque.position - ultimaPosicaoToque;
+                ultimaPosicaoToque = toque.position;
 
-                if (!isRecenteringEnabled)
+                if (!recentramentoAtivo)
                 {
                     // Controle de rotação da câmera em órbita em torno da jangada
-                    freeLookCamera.m_XAxis.Value += delta.x * swipeSensitivityX;
-                    freeLookCamera.m_YAxis.Value -= delta.y * swipeSensitivityY;
+                    cameraFreeLook.m_XAxis.Value += delta.x * sensibilidadeDeslizeX;
+                    cameraFreeLook.m_YAxis.Value -= delta.y * sensibilidadeDeslizeY;
                 }
                 else
                 {
                     // Controle de rotação da jangada ao longo do eixo Y
-                    float rotacaoInput = -delta.x * swipeSensitivityX;
-                    raftController.AplicarRotacao(rotacaoInput);
+                    float entradaRotacao = -delta.x * sensibilidadeDeslizeX;
+                    controladorJangada.AplicarRotacao(entradaRotacao);
                 }
             }
-            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+            else if (toque.phase == TouchPhase.Ended || toque.phase == TouchPhase.Canceled)
             {
-                isDragging = false;
+                estaArrastando = false;
 
                 // Reativa o input do eixo X e Y após o toque, conforme o estado do botão
-                if (isRecenteringEnabled)
+                if (recentramentoAtivo)
                 {
-                    freeLookCamera.m_XAxis.m_InputAxisName = "Mouse X";  // Reativa o input do eixo X
-                    freeLookCamera.m_YAxis.m_InputAxisName = "Mouse Y";  // Reativa o input do eixo Y
+                    cameraFreeLook.m_XAxis.m_InputAxisName = "Mouse X";  // Reativa o input do eixo X
+                    cameraFreeLook.m_YAxis.m_InputAxisName = "Mouse Y";  // Reativa o input do eixo Y
                 }
             }
         }
     }
 
-    private void ToggleRecentering()
+    private void AlternarRecentramento()
     {
-        if (isRecenteringEnabled)
+        if (recentramentoAtivo)
         {
-            DisableRecentering();
+            DesativarRecentramento();
         }
         else
         {
-            EnableRecentering();
+            AtivarRecentramento();
         }
     }
 
-    private void DisableRecentering()
+    private void DesativarRecentramento()
     {
-        isRecenteringEnabled = false;
-        freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
-        Debug.Log("Recentering desativado");
+        recentramentoAtivo = false;
+        cameraFreeLook.m_RecenterToTargetHeading.m_enabled = false;
+        Debug.Log("Recentramento desativado");
     }
 
-    private void EnableRecentering()
+    private void AtivarRecentramento()
     {
-        isRecenteringEnabled = true;
-        freeLookCamera.m_RecenterToTargetHeading.m_WaitTime = 1.0f; // Define o tempo de espera para 1 segundo
-        freeLookCamera.m_RecenterToTargetHeading.m_enabled = true;
-        Debug.Log("Recentering ativado");
+        recentramentoAtivo = true;
+        cameraFreeLook.m_RecenterToTargetHeading.m_WaitTime = 1.0f; // Define o tempo de espera para 1 segundo
+        cameraFreeLook.m_RecenterToTargetHeading.m_enabled = true;
+        Debug.Log("Recentramento ativado");
     }
 }

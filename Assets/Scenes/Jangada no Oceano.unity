@@ -122,6 +122,38 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &186970066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 186970067}
+  m_Layer: 0
+  m_Name: Cenario Oceano
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &186970067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186970066}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1544, y: 720, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1148844678}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &277127462
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +165,7 @@ GameObject:
   - component: {fileID: 277127464}
   - component: {fileID: 277127463}
   m_Layer: 0
-  m_Name: FreeLook Camera
+  m_Name: 'Cinemachine '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -291,11 +323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a609e32bd6974545add454e1a5080c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  freeLookCamera: {fileID: 277127463}
-  toggleRecenteringButton: {fileID: 2013301211}
-  swipeSensitivityX: 0.1
-  swipeSensitivityY: 0.001
-  raftController: {fileID: 1562464808}
+  cameraFreeLook: {fileID: 277127463}
+  botaoAlternarRecentramento: {fileID: 2013301211}
+  sensibilidadeDeslizeX: 0.2
+  sensibilidadeDeslizeY: 0.2
+  controladorJangada: {fileID: 1562464808}
 --- !u!4 &339687359
 Transform:
   m_ObjectHideFlags: 0
@@ -304,12 +336,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 339687357}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.4343514, y: 2.8204803, z: -0.6708541}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1541.5657, y: -717.1795, z: -0.6708541}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 989039739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &421553067
 GameObject:
@@ -5885,12 +5917,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 753576295}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960.00006, y: -447.6684, z: 0}
+  m_LocalScale: {x: 0.6217617, y: 0.6217617, z: 0.6217617}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1750206834}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &797916427
 GameObject:
@@ -5967,7 +5999,7 @@ GameObject:
   - component: {fileID: 874540748}
   - component: {fileID: 874540747}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Button Pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6130,7 +6162,7 @@ GameObject:
   - component: {fileID: 961833776}
   - component: {fileID: 961833775}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Painel do Mapa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6194,6 +6226,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961833773}
   m_CullTransparentMesh: 1
+--- !u!1 &989039738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 989039739}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &989039739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989039738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1544, y: 720, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1479229384}
+  - {fileID: 339687359}
+  - {fileID: 1146497269}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1020691627
 GameObject:
   m_ObjectHideFlags: 3
@@ -6604,12 +6670,45 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146497267}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 48.56051, y: 1740.1057, z: -736.4515}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1495.4395, y: 1020.1057, z: -736.4515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 989039739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1148844677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1148844678}
+  m_Layer: 0
+  m_Name: Ilhas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1148844678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148844677}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 543450653029143428}
+  - {fileID: 543450652764669915}
+  m_Father: {fileID: 186970067}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1165555750
 GameObject:
@@ -6670,7 +6769,7 @@ GameObject:
   - component: {fileID: 1232658780}
   - component: {fileID: 1232658779}
   m_Layer: 5
-  m_Name: Button Ligar Jangada
+  m_Name: Button Ligar/Desligar Jangada
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7685,12 +7784,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479229382}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.203892, y: 1873.0266, z: 81.40182}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1573.2039, y: 1153.0266, z: 81.40182}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 989039739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1562464806
 GameObject:
@@ -7709,7 +7808,7 @@ GameObject:
   - component: {fileID: 1562464813}
   - component: {fileID: 1562464814}
   m_Layer: 3
-  m_Name: Jangada
+  m_Name: Jangada Inicial
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -7750,10 +7849,10 @@ MonoBehaviour:
   velocidadeMaxima: 35
   aceleracao: 1
   inerciaRotacao: 0.95
-  velocidadeRotacao: 1
+  velocidadeRotacao: 0.3
   suavidadeRotacao: 0.2
   limiteRotacao: 30
-  dust: {fileID: 553217842}
+  rastroMovimento: {fileID: 553217842}
 --- !u!114 &1562464809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7766,19 +7865,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a64697b39aa2e4d9f52bce11718c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floaters:
+  pontosFlutuantes:
   - {fileID: 1758793648}
   - {fileID: 421553068}
   - {fileID: 2074387094}
   - {fileID: 1905576246}
   - {fileID: 646401417}
-  underWaterDrag: 3
-  angularWaterDrag: 1
-  airDrag: 0
-  airAngularDrag: 0.05
-  floatingPower: 500
-  waterHeight: 0
-  floatersUnderwater: 0
+  arrastoSubmerso: 3
+  arrastoAngularSubmerso: 1
+  arrastoNoAr: 0
+  arrastoAngularNoAr: 0.05
+  forcaDeFlutuacao: 500
+  alturaDaAgua: 0
+  pontosSubmersos: 0
 --- !u!114 &1562464810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7791,10 +7890,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45edac0c4a745dd47812abf41426e24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wavesHeight: 3
-  wavesFrequency: 10000
-  wavesSpeed: 1
-  ocean: {fileID: 2073434420}
+  alturaDasOndas: 2
+  frequenciaDasOndas: 10000
+  velocidadeDasOndas: 1
+  oceano: {fileID: 2073434420}
 --- !u!65 &1562464811
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7966,7 +8065,7 @@ GameObject:
   - component: {fileID: 1590046751}
   - component: {fileID: 1590046750}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Button Mapa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8385,7 +8484,7 @@ GameObject:
   - component: {fileID: 1750206832}
   - component: {fileID: 1750206831}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Canvas UI Jangada
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8471,6 +8570,7 @@ RectTransform:
   - {fileID: 1590046749}
   - {fileID: 874540746}
   - {fileID: 961833774}
+  - {fileID: 753576298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8605,7 +8705,7 @@ GameObject:
   - component: {fileID: 2013301212}
   - component: {fileID: 2013301211}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Button Destravar Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8842,7 +8942,7 @@ GameObject:
   - component: {fileID: 2073434424}
   - component: {fileID: 2073434425}
   m_Layer: 4
-  m_Name: Oceano 1
+  m_Name: Oceano Principal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8925,10 +9025,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 532c7e6837243e445a40b8e2a61442a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resolution: 50
-  size: 1500
-  oceanMaterial: {fileID: 2100000, guid: a0ef40afd49c8f443b5246ca61d33fee, type: 2}
-  player: {fileID: 1562464807}
+  resolucao: 50
+  tamanho: 500
+  materialDoOceano: {fileID: 2100000, guid: a0ef40afd49c8f443b5246ca61d33fee, type: 2}
+  jogador: {fileID: 1562464807}
 --- !u!114 &2073434425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8941,8 +9041,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90f899aa26952a7438c8b3cc459c257f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raft: {fileID: 1562464807}
-  oceanHeight: 0
+  jangada: {fileID: 1562464807}
+  alturaDoOceano: 0
 --- !u!1 &2074387093
 GameObject:
   m_ObjectHideFlags: 0
@@ -8986,7 +9086,7 @@ GameObject:
   - component: {fileID: 2076689217}
   - component: {fileID: 2076689216}
   m_Layer: 5
-  m_Name: RawImage
+  m_Name: RawImage do Mapa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11485,8 +11585,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149025496417}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -72, y: -5, z: -1412}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1616, y: -725, z: -1412}
   m_LocalScale: {x: 1.8768, y: 1.8768, z: 1.8768}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11499,7 +11599,7 @@ Transform:
   - {fileID: 1603117236}
   - {fileID: 1389289749}
   - {fileID: 481753117}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1148844678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &543450653029143428
 Transform:
@@ -11509,8 +11609,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148759382334}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -29, y: -13, z: 402}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: -1573, y: -733, z: 402}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11532,7 +11632,7 @@ Transform:
   - {fileID: 4931218026664038491}
   - {fileID: 1729776008770607409}
   - {fileID: 7685259906567040668}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1148844678}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &547201406228534437
 Transform:
@@ -13030,6 +13130,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543450652764669915}
+  - component: {fileID: 919132149025496420}
+  - component: {fileID: 919132149025496419}
   m_Layer: 0
   m_Name: ArquipelagoMaori
   m_TagString: Untagged
@@ -13037,6 +13139,56 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!23 &919132149025496419
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149025496417}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &919132149025496420
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149025496417}
+  m_Mesh: {fileID: 0}
 --- !u!1 &921391926274545422
 GameObject:
   m_ObjectHideFlags: 0
@@ -50506,16 +50658,12 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1750206834}
   - {fileID: 465838959}
+  - {fileID: 1435102412}
+  - {fileID: 277127464}
   - {fileID: 2073434420}
   - {fileID: 1677645228}
   - {fileID: 1562464807}
-  - {fileID: 277127464}
-  - {fileID: 1750206834}
-  - {fileID: 753576298}
-  - {fileID: 339687359}
-  - {fileID: 543450652764669915}
-  - {fileID: 543450653029143428}
-  - {fileID: 1435102412}
-  - {fileID: 1146497269}
-  - {fileID: 1479229384}
+  - {fileID: 989039739}
+  - {fileID: 186970067}

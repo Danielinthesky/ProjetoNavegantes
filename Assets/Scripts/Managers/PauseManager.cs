@@ -4,7 +4,7 @@ public class PauseManager : MonoBehaviour
 {
     private bool jogoPausado = false;
 
-    public void TogglePause()
+    public void BotaoAlternarPause()
     {
         jogoPausado = !jogoPausado;
 

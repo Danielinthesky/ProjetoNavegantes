@@ -19,13 +19,13 @@ public class FloaterObject : MonoBehaviour
     public int pontosSubmersos; 
     bool estaSubmerso; 
 
-    OceanManager gerenciadorDoOceano; 
+    OceanManager oceanManager; 
     Rigidbody rb; 
    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        gerenciadorDoOceano = GetComponent<OceanManager>();
+        oceanManager = GetComponent<OceanManager>();
     }
 
     
@@ -37,7 +37,7 @@ public class FloaterObject : MonoBehaviour
         for (int i = 0; i < pontosFlutuantes.Length; i++)
         {
             // Calcula a diferença entre a posição do ponto de flutuação e a altura da agua
-            float diferenca = pontosFlutuantes[i].position.y - gerenciadorDoOceano.WaterHeightAtPosition(pontosFlutuantes[i].position);
+            float diferenca = pontosFlutuantes[i].position.y - oceanManager.AlturaDaAguaNaPosicao(pontosFlutuantes[i].position);
 
             // Se o ponto está abaixo da superfície da água.
             if (diferenca < 0)
