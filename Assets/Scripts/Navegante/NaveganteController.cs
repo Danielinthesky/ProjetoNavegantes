@@ -3,77 +3,79 @@ using Cinemachine;
 
 public class NaveganteController : MonoBehaviour
 {
-    public float speed = 5f;                      // Velocidade de movimento do personagem
-    public float rotationSpeed = 10f;             // Velocidade de rotação do personagem
-    public DynamicJoystick movementJoystick;      // Joystick para movimento do personagem (esquerdo)
-    public DynamicJoystick cameraJoystick;        // Joystick para rotação da câmera (direito)
-    public CinemachineFreeLook freeLookCamera;    // Referência à Cinemachine FreeLook Camera
+    public float moveSpeed = 5f;
+    public float rotationSpeed = 10f;
+    public float cameraRotationSensitivity = 0.1f; // Sensibilidade ajustada para a rotação da câmera
+    public DynamicJoystick joystick; // Arraste o componente do joystick para este campo no inspector.
+    public CinemachineVirtualCamera virtualCamera; // Arraste sua CinemachineVirtualCamera para este campo.
+    public Animator animator; // Adicione o componente Animator do personagem aqui.
 
-    public float cameraSensitivity = 1f;          // Sensibilidade de rotação da câmera
-    public float maxHorizontalAngle = 90f;        // Ângulo máximo para a rotação horizontal da câmera
-
-    private Animator animator;
+    private Camera mainCamera;
     private Vector3 moveDirection;
+    private float currentCameraRotationX = 0f;
+    public float maxCameraRotationX = 60f; // Limite para a rotação vertical da câmera
 
     void Start()
     {
-        animator = GetComponent<Animator>();
-
-        // Certifique-se de que a câmera não tenha rotação inicial ao redor do personagem
-        if (freeLookCamera != null)
-        {
-            freeLookCamera.m_XAxis.Value = 0;
-            freeLookCamera.m_YAxis.Value = 0.5f; // Posição inicial no eixo Y (opcional)
-        }
+        mainCamera = Camera.main;
     }
 
     void Update()
     {
-        HandleMovement();
-        HandleCameraRotation();
-    }
+        // Movimento do personagem baseado no joystick
+        float horizontal = joystick.Horizontal;
+        float vertical = joystick.Vertical;
 
-    void HandleMovement()
-    {
-        // Captura os inputs do joystick de movimento
-        float horizontal = movementJoystick.Horizontal;
-        float vertical = movementJoystick.Vertical;
-
-        if (horizontal != 0 || vertical != 0)
+        if (Mathf.Abs(horizontal) > 0.1f || Mathf.Abs(vertical) > 0.1f)
         {
-            moveDirection = new Vector3(horizontal, 0, vertical).normalized;
+            // Calcula a direção de movimento em relação à orientação da câmera
+            Vector3 forward = mainCamera.transform.forward;
+            Vector3 right = mainCamera.transform.right;
 
-            // Aplica rotação do personagem na direção do movimento
-            Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
-            transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            forward.y = 0f; // Ignora a inclinação vertical da câmera
+            right.y = 0f;
 
-            // Move o personagem
-            transform.position += moveDirection * speed * Time.deltaTime;
+            forward.Normalize();
+            right.Normalize();
+
+            moveDirection = (forward * vertical + right * horizontal).normalized;
+
+            // Move o personagem na direção calculada
+            transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+
+            // Rotaciona o personagem na direção do movimento
+            if (moveDirection != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * rotationSpeed);
+            }
+
+            // Ativa a animação de caminhada
             animator.SetBool("isWalking", true);
         }
         else
         {
+            // Ativa a animação de idle quando o personagem para de se mover
             animator.SetBool("isWalking", false);
         }
-    }
 
-    void HandleCameraRotation()
-    {
-        // Controla a rotação da câmera usando o joystick da câmera
-        float cameraHorizontal = cameraJoystick.Horizontal;
-        float cameraVertical = cameraJoystick.Vertical;
-
-        if (freeLookCamera != null)
+        // Controle de rotação da câmera por drag
+        if (Input.touchCount > 0)
         {
-            // Ajusta o valor de rotação em X com a sensibilidade e limita o ângulo horizontal
-            float newXAxisValue = freeLookCamera.m_XAxis.Value + cameraHorizontal * cameraSensitivity * Time.deltaTime;
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Moved)
+            {
+                Vector2 touchDeltaPosition = touch.deltaPosition;
 
-            // Limita o ângulo horizontal entre -maxHorizontalAngle e +maxHorizontalAngle
-            newXAxisValue = Mathf.Clamp(newXAxisValue, -maxHorizontalAngle, maxHorizontalAngle);
-            freeLookCamera.m_XAxis.Value = newXAxisValue;
+                // Rotaciona a câmera horizontalmente
+                transform.Rotate(0, touchDeltaPosition.x * cameraRotationSensitivity, 0);
 
-            // Ajusta o valor de rotação em Y com a sensibilidade
-            freeLookCamera.m_YAxis.Value += cameraVertical * cameraSensitivity * Time.deltaTime;
+                // Controla a rotação vertical da câmera com restrição
+                currentCameraRotationX -= touchDeltaPosition.y * cameraRotationSensitivity;
+                currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -maxCameraRotationX, maxCameraRotationX);
+
+                virtualCamera.transform.localRotation = Quaternion.Euler(currentCameraRotationX, 0, 0);
+            }
         }
     }
 }
