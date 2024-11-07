@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 7e099cfb170801642b8225a110ffdb7e
   - enabled: 1
+    path: Assets/Scenes/Jangada no Oceano.unity
+    guid: ff7acc184a4bcb145b35eff685176d31
+  - enabled: 1
     path: Assets/Scenes/Cena de Carregamento.unity
     guid: 0d1f145784799e942a511a7b3cd4933c
   - enabled: 1
