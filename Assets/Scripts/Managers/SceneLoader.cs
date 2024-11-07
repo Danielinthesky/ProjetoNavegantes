@@ -6,7 +6,7 @@ public class SceneLoader : MonoBehaviour
     // Método para carregar uma cena pelo nome
     public void CarregarCenaPorNome(string nomeCena)
     {
-        SceneManager.LoadScene("Jangada no Oceano");
+        SceneManager.LoadScene("Cena de Carregamento");
     }
 
     // Método para carregar uma cena pelo índice (opcional)

@@ -1,0 +1,34 @@
+{
+    "name": "CameraJangada",
+    "maps": [
+        {
+            "name": "Touch",
+            "id": "bdd423ba-5c2d-40c8-84ef-4acbcf6553b4",
+            "actions": [
+                {
+                    "name": "Touch",
+                    "type": "PassThrough",
+                    "id": "66284fb4-e728-4bc6-9e7e-7a31cf1e6bb3",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1b7abfda-a698-4fc8-a53c-5a71941c3c11",
+                    "path": "<Touchscreen>/primaryTouch/indirectTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Touch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

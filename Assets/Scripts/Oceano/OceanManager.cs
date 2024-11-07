@@ -14,24 +14,45 @@ public class OceanManager : MonoBehaviour
 
     void Start()
     {
-        ConfigurarVariaveis(); 
+        // Garante que as variáveis estão configuradas no início do jogo
+        if (oceano != null)
+        {
+            ConfigurarVariaveis();
+        }
+        else
+        {
+            Debug.LogError("A referência 'oceano' não está atribuída. Por favor, verifique no inspetor.", this);
+        }
     }
 
     private void ConfigurarVariaveis()
     {
-        
-        materialDoOceano = oceano.GetComponent<Renderer>().sharedMaterial;
-
-        
-        AtualizarMaterial();
+        // Verifica se o objeto 'oceano' possui um Renderer antes de acessar o material
+        Renderer renderer = oceano?.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            materialDoOceano = renderer.sharedMaterial;
+            AtualizarMaterial();
+        }
+        else
+        {
+            Debug.LogError("O objeto 'oceano' não possui um componente Renderer.", this);
+        }
     }
 
     private void AtualizarMaterial()
     {
-        // Envia os parâmetros de onda para o shader
-        materialDoOceano.SetFloat("_Forca_da_Onda", frequenciaDasOndas / 100);
-        materialDoOceano.SetFloat("_Velocidade_da_Onda", velocidadeDasOndas / 100);
-        materialDoOceano.SetFloat("_Altura_da_Onda", alturaDasOndas / 100);
+        // Verifica se materialDoOceano foi configurado corretamente antes de tentar acessar
+        if (materialDoOceano != null)
+        {
+            materialDoOceano.SetFloat("_Forca_da_Onda", frequenciaDasOndas / 100);
+            materialDoOceano.SetFloat("_Velocidade_da_Onda", velocidadeDasOndas / 100);
+            materialDoOceano.SetFloat("_Altura_da_Onda", alturaDasOndas / 100);
+        }
+        else
+        {
+            Debug.LogWarning("materialDoOceano não está atribuído, a atualização do material foi ignorada.", this);
+        }
     }
 
     public float AlturaDaAguaNaPosicao(Vector3 posicao)
@@ -43,8 +64,9 @@ public class OceanManager : MonoBehaviour
 
     void OnValidate()
     {
-        // Atualiza as variaveis sempre que há mudanças no inspetor, assim fica mais facil editar o oceano sem ter que buscar o material toda vez
+        // Executa apenas se oceano e materialDoOceano estão devidamente atribuídos
+        if (oceano == null) return;
         if (materialDoOceano == null) ConfigurarVariaveis();
-        AtualizarMaterial();
+        else AtualizarMaterial();
     }
 }

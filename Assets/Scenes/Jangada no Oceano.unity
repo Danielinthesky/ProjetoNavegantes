@@ -355,7 +355,7 @@ MonoBehaviour:
   m_RecenterToTargetHeading:
     m_enabled: 1
     m_WaitTime: 1
-    m_RecenteringTime: 1
+    m_RecenteringTime: 0.6
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_BindingMode: 4
@@ -1602,7 +1602,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1479229383}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: TogglePause
+        m_MethodName: BotaoAlternarPause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4570,13 +4570,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 339687357}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 339687358}
+        m_TargetAssemblyTypeName: CameraManager, Assembly-CSharp
+        m_MethodName: AlternarRecentramento
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -9134,7 +9134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiEmbarcar: {fileID: 1102199731}
-  nomeCenaIlha: Ilha Tutorial
+  nomeCenaIlha: Cena de Carregamento
   raftController: {fileID: 6179884601678157641}
 --- !u!135 &919132147580817071
 SphereCollider:
@@ -16579,22 +16579,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9112678645536786210}
   m_Mesh: {fileID: -7065902539087987022, guid: 0a73a025f3c715d4584c64e8a40dfdaf, type: 3}
---- !u!114 &2593134910866083858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6520883768329475627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45edac0c4a745dd47812abf41426e24c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alturaDasOndas: 2
-  frequenciaDasOndas: 10000
-  velocidadeDasOndas: 1
-  oceano: {fileID: 2073434420}
 --- !u!4 &2597374479253453007
 Transform:
   m_ObjectHideFlags: 0
@@ -40746,11 +40730,11 @@ GameObject:
   - component: {fileID: 2994971704469046457}
   - component: {fileID: 5814565780279192920}
   - component: {fileID: 5391350901929898773}
-  - component: {fileID: 2593134910866083858}
   - component: {fileID: 8419874791797370552}
   - component: {fileID: 6179884601678157641}
   - component: {fileID: 7910451914671213210}
   - component: {fileID: 8958939939422887770}
+  - component: {fileID: 8958939939422887771}
   m_Layer: 3
   m_Name: Jangada Inicial
   m_TagString: Jangada
@@ -51178,6 +51162,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velaCloth: {fileID: 3987530843814637286}
   intensidadeVento: 20
+--- !u!114 &8958939939422887771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6520883768329475627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45edac0c4a745dd47812abf41426e24c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alturaDasOndas: 2
+  frequenciaDasOndas: 10000
+  velocidadeDasOndas: 1
+  oceano: {fileID: 2073434420}
 --- !u!1 &8962635847794487003
 GameObject:
   m_ObjectHideFlags: 0

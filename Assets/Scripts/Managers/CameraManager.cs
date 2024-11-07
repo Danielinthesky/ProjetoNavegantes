@@ -1,78 +1,97 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using UnityEngine.InputSystem;
 
 public class CameraManager : MonoBehaviour
 {
-    public CinemachineFreeLook cameraFreeLook;    
-    public Button botaoAlternarRecentramento;     
+    public CinemachineFreeLook cameraFreeLook;
+    public Button botaoAlternarRecentramento;
     public float sensibilidadeDeslizeX = 0.2f;
     public float sensibilidadeDeslizeY = 0.2f;
-    public RaftController controladorJangada;     
+    public RaftController controladorJangada;
 
-    private bool recentramentoAtivo = true;       
+    private bool recentramentoAtivo = true;
     private Vector2 ultimaPosicaoToque;
     private bool estaArrastando = false;
 
-    void Start()
+    private CameraJangada controles;
+
+    void Awake()
     {
-        botaoAlternarRecentramento.onClick.RemoveAllListeners();
-        botaoAlternarRecentramento.onClick.AddListener(AlternarRecentramento);
-        AtivarRecentramento(); 
+        controles = new CameraJangada();
     }
 
-    void Update()
+    void OnEnable()
     {
-        if (Input.touchCount > 0)
-        {
-            Touch toque = Input.GetTouch(0);
+        controles.Touch.Touch.performed += OnTouchPerformed;
+        controles.Touch.Touch.canceled += OnTouchCanceled;
+        controles.Enable();
 
-            if (toque.phase == TouchPhase.Began)
+        botaoAlternarRecentramento.onClick.RemoveAllListeners();
+        botaoAlternarRecentramento.onClick.AddListener(AlternarRecentramento);
+        AtivarRecentramento();
+    }
+
+    void OnDisable()
+    {
+        controles.Touch.Touch.performed -= OnTouchPerformed;
+        controles.Touch.Touch.canceled -= OnTouchCanceled;
+        controles.Disable();
+    }
+
+    private void OnTouchPerformed(InputAction.CallbackContext context)
+    {
+        Touchscreen touchscreen = Touchscreen.current;
+        if (touchscreen == null) return;
+
+        var toque = touchscreen.primaryTouch;
+
+        if (toque.press.isPressed)
+        {
+            if (!estaArrastando)
             {
                 estaArrastando = true;
-                ultimaPosicaoToque = toque.position;
+                ultimaPosicaoToque = toque.position.ReadValue();
 
-                // Bloqueia a rotaçao da camera para ambos os eixos se o recentramento estiver ativo
                 if (recentramentoAtivo)
                 {
-                    // Desativa o input do eixo X e Y
-                    cameraFreeLook.m_XAxis.m_InputAxisName = ""; 
-                    cameraFreeLook.m_YAxis.m_InputAxisName = ""; 
+                    cameraFreeLook.m_XAxis.m_InputAxisName = "";
+                    cameraFreeLook.m_YAxis.m_InputAxisName = "";
                 }
             }
-            else if (toque.phase == TouchPhase.Moved && estaArrastando)
+            else
             {
-                Vector2 delta = toque.position - ultimaPosicaoToque;
-                ultimaPosicaoToque = toque.position;
+                Vector2 posicaoAtual = toque.position.ReadValue();
+                Vector2 delta = posicaoAtual - ultimaPosicaoToque;
+                ultimaPosicaoToque = posicaoAtual;
 
                 if (!recentramentoAtivo)
                 {
-                    // Controle de rotação da câmera em órbita em torno da jangada
                     cameraFreeLook.m_XAxis.Value += delta.x * sensibilidadeDeslizeX;
                     cameraFreeLook.m_YAxis.Value -= delta.y * sensibilidadeDeslizeY;
                 }
                 else
                 {
-                    // Controle de rotação da jangada ao longo do eixo Y
                     float entradaRotacao = -delta.x * sensibilidadeDeslizeX;
                     controladorJangada.AplicarRotacao(entradaRotacao);
-                }
-            }
-            else if (toque.phase == TouchPhase.Ended || toque.phase == TouchPhase.Canceled)
-            {
-                estaArrastando = false;
-
-                // Reativa o input do eixo X e Y após o toque, conforme o estado do botão
-                if (recentramentoAtivo)
-                {
-                    cameraFreeLook.m_XAxis.m_InputAxisName = "Mouse X";  // Reativa o input do eixo X
-                    cameraFreeLook.m_YAxis.m_InputAxisName = "Mouse Y";  // Reativa o input do eixo Y
                 }
             }
         }
     }
 
-    private void AlternarRecentramento()
+    private void OnTouchCanceled(InputAction.CallbackContext context)
+    {
+        estaArrastando = false;
+
+        if (recentramentoAtivo)
+        {
+            cameraFreeLook.m_XAxis.m_InputAxisName = "Mouse X";
+            cameraFreeLook.m_YAxis.m_InputAxisName = "Mouse Y";
+        }
+    }
+
+    public void AlternarRecentramento()
     {
         if (recentramentoAtivo)
         {
@@ -88,14 +107,18 @@ public class CameraManager : MonoBehaviour
     {
         recentramentoAtivo = false;
         cameraFreeLook.m_RecenterToTargetHeading.m_enabled = false;
+        cameraFreeLook.m_XAxis.m_InputAxisName = "Mouse X";
+        cameraFreeLook.m_YAxis.m_InputAxisName = "Mouse Y";
         Debug.Log("Recentramento desativado");
     }
 
     private void AtivarRecentramento()
     {
         recentramentoAtivo = true;
-        cameraFreeLook.m_RecenterToTargetHeading.m_WaitTime = 1.0f; // Define o tempo de espera para 1 segundo
+        cameraFreeLook.m_RecenterToTargetHeading.m_WaitTime = 1.0f;
         cameraFreeLook.m_RecenterToTargetHeading.m_enabled = true;
+        cameraFreeLook.m_XAxis.m_InputAxisName = "";
+        cameraFreeLook.m_YAxis.m_InputAxisName = "";
         Debug.Log("Recentramento ativado");
     }
 }
