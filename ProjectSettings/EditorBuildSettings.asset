@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Jangada no Oceano.unity
     guid: ff7acc184a4bcb145b35eff685176d31
+  - enabled: 1
+    path: Assets/Scenes/Ilha Tutorial.unity
+    guid: b678d3d1f428a22409946ec0765f768e
   m_configObjects: {}
