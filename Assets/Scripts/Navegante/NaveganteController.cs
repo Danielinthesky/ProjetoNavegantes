@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
-    private float playerSpeed = 8.0f;
+    public float playerSpeed = 8.0f;
     private float gravityValue = -9.81f;
 
     private Animator anim;
