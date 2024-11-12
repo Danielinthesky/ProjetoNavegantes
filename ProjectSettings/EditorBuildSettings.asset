@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 7e099cfb170801642b8225a110ffdb7e
+  - enabled: 1
     path: Assets/Scenes/Jangada no Oceano.unity
     guid: ff7acc184a4bcb145b35eff685176d31
   - enabled: 1
@@ -14,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ilha Tutorial.unity
     guid: b678d3d1f428a22409946ec0765f768e
+  - enabled: 1
+    path: Assets/Scenes/SalaMultiplayer.unity
+    guid: 778a9d009a22e094a97676c582789415
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerTeste.unity
+    guid: f932fa770c79456418774099de58887e
   m_configObjects: {}

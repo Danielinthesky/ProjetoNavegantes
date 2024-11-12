@@ -11,7 +11,6 @@ public class RaftController : MonoBehaviour
     public float suavidadeRotacao = 0.1f;
     public float limiteRotacao = 30.0f;
 
-    private bool estaMovendo = false;
     private Rigidbody rb;
     private Vector2 movimentoInput; // Armazena a entrada do joystick para movimento
     private float velocidadeAtual = 0.0f;
@@ -21,17 +20,16 @@ public class RaftController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        AlternarMovimento(); // Ativa o movimento no início para facilitar o teste
     }
 
     private void FixedUpdate()
     {
-        // Calcula a velocidade alvo com base no estado de movimento
-        float velocidadeAlvo = estaMovendo ? velocidadeMaxima : 0.0f;
+        // Calcula a velocidade alvo com base na entrada de movimento
+        float velocidadeAlvo = movimentoInput.magnitude > 0 ? velocidadeMaxima : 0.0f;
         velocidadeAtual = Mathf.Lerp(velocidadeAtual, velocidadeAlvo, aceleracao * Time.fixedDeltaTime);
 
         // Verifica se o input de movimento é maior que zero
-        if (movimentoInput.magnitude > 0 && estaMovendo)
+        if (movimentoInput.magnitude > 0)
         {
             // Direção de movimento considerando -transform.right como frente
             Vector3 direcaoMovimento = (-transform.right * movimentoInput.y + transform.forward * movimentoInput.x).normalized;
@@ -71,20 +69,6 @@ public class RaftController : MonoBehaviour
         float alvoRotacao = rotacaoInput * velocidadeRotacao;
         velocidadeRotacaoAtual = Mathf.Lerp(velocidadeRotacaoAtual, alvoRotacao, suavidadeRotacao);
         Debug.Log("Aplicando rotação: " + velocidadeRotacaoAtual);
-    }
-
-    public void AlternarMovimento()
-    {
-        estaMovendo = !estaMovendo;
-        if (estaMovendo)
-        {
-            rastroMovimento.Play();
-        }
-        else
-        {
-            rastroMovimento.Stop();
-        }
-        Debug.Log("Movimento da jangada: " + (estaMovendo ? "Ligado" : "Desligado"));
     }
 
     // Método chamado pelo novo sistema de Input da Unity para capturar o movimento
