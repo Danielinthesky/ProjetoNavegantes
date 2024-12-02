@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2799397775361057678}
   - component: {fileID: 6266659984500553204}
   - component: {fileID: 9074478278237051924}
+  - component: {fileID: -8793301815324037626}
   m_Layer: 0
   m_Name: Cube03LOD
   m_TagString: Untagged
@@ -113,3 +114,24 @@ LODGroup:
     renderers:
     - renderer: {fileID: 6266659984500553204}
   m_Enabled: 1
+--- !u!65 &-8793301815324037626
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8308035589924730370}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10.182344, y: 9.520103, z: 10.20886}
+  m_Center: {x: -0.014459848, y: 3.4948738, z: -0.4633243}
