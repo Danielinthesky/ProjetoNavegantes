@@ -5,12 +5,18 @@ public class DirectJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     public RectTransform fundo;
     public RectTransform alavanca;
-    public RaftController controladorJangada;
+    public JangadaVelejadora controladorJangada;
 
     private Vector2 posicaoInicial;
     public float sensibilidadeJoystick = 1.0f;
     private float fatorEscalaDpi;
     public bool estaArrastando { get; private set; }
+    public GameObject joystickCanvas; // O joystick Canvas será ativado/desativado com proximidade
+
+    public Transform player; // Referência ao jogador
+    public Transform vela; // Referência à vela
+    public float distanciaAtivacao = 2.0f; // Distância para ativar o joystick
+    public float anguloVisaoAtivacao = 45.0f; // Ângulo de visão necessário para ativação
 
     void Start()
     {
@@ -20,6 +26,40 @@ public class DirectJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
         if (fatorEscalaDpi == 0)
         {
             fatorEscalaDpi = 1;
+        }
+
+        joystickCanvas.SetActive(false); // O joystick começa desativado
+    }
+
+    void Update()
+    {
+        VerificarProximidadeEVisao();
+    }
+
+    private void VerificarProximidadeEVisao()
+    {
+        Vector3 direcaoParaVela = vela.position - player.position;
+        float distancia = direcaoParaVela.magnitude;
+
+        // Verifica se o jogador está dentro da distância de ativação
+        if (distancia <= distanciaAtivacao)
+        {
+            // Calcula o ângulo entre a frente do jogador e a direção da vela
+            float angulo = Vector3.Angle(player.forward, direcaoParaVela);
+
+            // Verifica se o jogador está olhando para a vela
+            if (angulo <= anguloVisaoAtivacao)
+            {
+                joystickCanvas.SetActive(true); // Ativa o joystick
+            }
+            else
+            {
+                joystickCanvas.SetActive(false); // Desativa o joystick
+            }
+        }
+        else
+        {
+            joystickCanvas.SetActive(false); // Desativa o joystick
         }
     }
 
@@ -38,7 +78,7 @@ public class DirectJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
 
         if (controladorJangada != null)
         {
-            // controladorJangada.DefinirEntradaJoystick(valorNormalizado);
+            controladorJangada.DefinirEntradaJoystick(valorNormalizado); // Ajusta a rotação
         }
     }
 
@@ -49,7 +89,7 @@ public class DirectJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
 
         if (controladorJangada != null)
         {
-            // controladorJangada.DefinirEntradaJoystick(0);
+            controladorJangada.DefinirEntradaJoystick(0); // Reseta a rotação
         }
     }
 }
