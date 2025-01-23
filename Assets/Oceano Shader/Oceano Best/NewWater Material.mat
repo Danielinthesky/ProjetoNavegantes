@@ -97,7 +97,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Altura_da_Onda: 0.005
+    - _Altura_da_Onda: 0.02
     - _Altura_da_Superficie: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
@@ -113,7 +113,7 @@ Material:
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _Evanecimento_da_Profundidade: 13.3
-    - _Forca_da_Onda: 0.01
+    - _Forca_da_Onda: 100
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0

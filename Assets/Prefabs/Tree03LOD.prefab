@@ -103,16 +103,13 @@ LODGroup:
   - screenRelativeHeight: 0.999
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 3061639577591111317, guid: 6a01247df7b6710408e2280dbdb07438,
-        type: 3}
+    - renderer: {fileID: 5732865944469560641}
   - screenRelativeHeight: 0.30524945
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 3061639577591111317, guid: 6a01247df7b6710408e2280dbdb07438,
-        type: 3}
+    - renderer: {fileID: 5732865944469560641}
   - screenRelativeHeight: 0.07964496
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 3061639577591111317, guid: 6a01247df7b6710408e2280dbdb07438,
-        type: 3}
+    - renderer: {fileID: 5732865944469560641}
   m_Enabled: 1
