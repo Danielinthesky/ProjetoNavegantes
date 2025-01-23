@@ -15,60 +15,32 @@ public class RaftController : MonoBehaviour
     private Vector2 movimentoInput; // Armazena a entrada do joystick para movimento
     private float velocidadeAtual = 0.0f;
     private float velocidadeRotacaoAtual = 0.0f;
-    public ParticleSystem rastroMovimento;
+    public bool jangadaEmMovimento = false;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        // Calcula a velocidade alvo com base na entrada de movimento
-        float velocidadeAlvo = movimentoInput.magnitude > 0 ? velocidadeMaxima : 0.0f;
-        velocidadeAtual = Mathf.Lerp(velocidadeAtual, velocidadeAlvo, aceleracao * Time.fixedDeltaTime);
-
-        // Verifica se o input de movimento é maior que zero
-        if (movimentoInput.magnitude > 0)
+        if (jangadaEmMovimento)
         {
-            // Direção de movimento considerando -transform.right como frente
-            Vector3 direcaoMovimento = (-transform.right * movimentoInput.y + transform.forward * movimentoInput.x).normalized;
-            Vector3 movimento = direcaoMovimento * velocidadeAtual * Time.fixedDeltaTime;
-
-            // Aplica a força para mover a jangada
+            // Move a jangada automaticamente para frente
+            Vector3 movimento = transform.forward * velocidadeMaxima * Time.fixedDeltaTime;
             rb.AddForce(movimento, ForceMode.Acceleration);
-
-            // Log de debug para confirmar o movimento
-            Debug.Log("Movendo a jangada na direção: " + movimento);
-
-            if (!rastroMovimento.isPlaying)
-                rastroMovimento.Play();
-        }
-        else if (rastroMovimento.isPlaying)
-        {
-            rastroMovimento.Stop();
         }
 
-        // Aplica a rotação suavemente, respeitando o input horizontal do joystick
-        if (Mathf.Abs(movimentoInput.x) > 0.1f)
+        // Rotaciona a jangada com base no input
+        if (movimentoInput.magnitude > 0)
         {
             AplicarRotacao(movimentoInput.x);
         }
-
-        // Aplica inércia à rotação
-        if (Mathf.Abs(velocidadeRotacaoAtual) > 0.01f)
-        {
-            rb.angularVelocity = Vector3.ClampMagnitude(rb.angularVelocity, limiteRotacao);
-            rb.AddTorque(Vector3.up * velocidadeRotacaoAtual, ForceMode.Acceleration);
-            velocidadeRotacaoAtual *= inerciaRotacao;
-        }
     }
-
     private void AplicarRotacao(float rotacaoInput)
     {
-        float alvoRotacao = rotacaoInput * velocidadeRotacao;
-        velocidadeRotacaoAtual = Mathf.Lerp(velocidadeRotacaoAtual, alvoRotacao, suavidadeRotacao);
-        Debug.Log("Aplicando rotação: " + velocidadeRotacaoAtual);
+        float torque = rotacaoInput * velocidadeRotacao;
+        rb.AddTorque(Vector3.up * torque, ForceMode.Acceleration);
     }
 
     // Método chamado pelo novo sistema de Input da Unity para capturar o movimento
@@ -76,5 +48,16 @@ public class RaftController : MonoBehaviour
     {
         movimentoInput = context.ReadValue<Vector2>();
         Debug.Log("Movimento Input: " + movimentoInput); // Log para confirmar que o input está chegando
+    }
+    public void Mover(Vector2 direcao)
+{
+    // Lógica para movimentar a jangada com base na entrada
+    Debug.Log($"Movendo jangada na direção: {direcao}");
+}
+
+    public void ToggleMovement()
+    {
+        jangadaEmMovimento = !jangadaEmMovimento;
+        Debug.Log("Jangada em movimento: " + jangadaEmMovimento);
     }
 }

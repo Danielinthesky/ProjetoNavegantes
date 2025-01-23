@@ -75,15 +75,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         textoStatus.text = "Falha ao entrar na sala: " + message;
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        textoStatus.text = $"{newPlayer.NickName} entrou na sala. Total de jogadores: {PhotonNetwork.CurrentRoom.PlayerCount}/2";
+    // public override void OnPlayerEnteredRoom(Player newPlayer)
+    // {
+    //     textoStatus.text = $"{newPlayer.NickName} entrou na sala. Total de jogadores: {PhotonNetwork.CurrentRoom.PlayerCount}/2";
 
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.LoadLevel("MultiplayerTeste");
-        }
-    }
+    //     if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
+    //     {
+    //         PhotonNetwork.LoadLevel("Ilha Tutorial");
+    //     }
+    // }
 
     // Método para o Dev Button criar uma sala aleatória
     public void CriarSalaAleatoria()

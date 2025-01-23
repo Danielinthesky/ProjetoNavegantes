@@ -8,21 +8,26 @@ public class OceanManager : MonoBehaviour
     public float alturaDasOndas = 0.5f;   
     public float frequenciaDasOndas = 1f; 
     public float velocidadeDasOndas = 1f; 
+
     [Header("Referências")]
-    [SerializeField] public Transform oceano; 
+    private Transform oceano; 
     private Material materialDoOceano;        
 
     void Start()
     {
+        // Procura o objeto com a tag "Oceano" caso não esteja atribuído
+        if (oceano == null)
+        {
+            GameObject oceanoObj = GameObject.FindWithTag("Agua");
+            if (oceanoObj != null)
+            {
+                oceano = oceanoObj.transform;
+            }
+           
+        }
+
         // Garante que as variáveis estão configuradas no início do jogo
-        if (oceano != null)
-        {
-            ConfigurarVariaveis();
-        }
-        else
-        {
-            Debug.LogError("A referência 'oceano' não está atribuída. Por favor, verifique no inspetor.", this);
-        }
+        ConfigurarVariaveis();
     }
 
     private void ConfigurarVariaveis()

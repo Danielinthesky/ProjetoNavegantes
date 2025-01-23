@@ -7,6 +7,20 @@ TagManager:
   - Ground
   - Jangada
   - Mastro
+  - StaminaSlider
+  - Oceano
+  - Jogador
+  - SpawnPoint
+  - Wendell
+  - Kapu
+  - CineWendell
+  - CineKapu
+  - Agua
+  - TesteAgua
+  - Chao
+  - Climb1
+  - Coletavel
+  - Navegar
   layers:
   - Default
   - TransparentFX
@@ -17,12 +31,12 @@ TagManager:
   - Ilha
   - Ground
   - MuseTextureLayer
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Oceano
+  - Personagem
+  - Agua
+  - TesteAgua
+  - Detector
+  - Escalavel
   - 
   - 
   - 
