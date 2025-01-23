@@ -25,7 +25,11 @@ public class FloaterObject : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        oceanManager = GetComponent<OceanManager>();
+        oceanManager = FindObjectOfType<OceanManager>();
+        if (oceanManager == null)
+    {
+        Debug.LogError("OceanManager não encontrado na cena. Certifique-se de que ele está presente.");
+    }
     }
 
     

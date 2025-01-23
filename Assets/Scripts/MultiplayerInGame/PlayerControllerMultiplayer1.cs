@@ -2,88 +2,260 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Photon.Pun;
 using Cinemachine;
+using System.Collections;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerControllerMultiplayer1 : MonoBehaviourPun
 {
-    private CharacterController controller;
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
-    [SerializeField] public float playerSpeed = 3.0f;
-    private float gravityValue = -9.81f;
+    [Header("Configurações de Velocidade")]
+    public float velocidadeBase = 5f;
+    public float incrementoVelocidade = 2f;
+    public float velocidadeMaxima = 10f;
 
-    private Animator anim;
-    private PlayerInput playerInput;
-    private Transform cameraTransform;
-    private Vector2 movimentoInput;
+    [Header("Referências")]
+    private Rigidbody rb;
+    private Animator animador;
+    private Camera mainCamera;
+    private WaterFloatMultiplayer waterFloatMultiplayer;
+    private StaminaPersonagemMultiplayer staminaManagerMultiplayer;
 
-   private void Start()
-{
-    if (!photonView.IsMine)
+    private Vector2 inputMovimento;
+    private Vector3 direcaoMovimento;
+    private float velocidadeAtual;
+    private bool usandoRigidbody;
+
+    private CinemachineFreeLook cinemachineCam;
+
+    public enum EstadoPersonagem
     {
-        GetComponent<PlayerInput>().enabled = false; // Desativa o PlayerInput para o jogador não local
-        return;
+        Idle,
+        Walking,
+        Running,
+        IdleSwimming,
+        Swimming
     }
 
-    controller = GetComponent<CharacterController>();
-    anim = GetComponent<Animator>();
-    playerInput = GetComponent<PlayerInput>();
+    private EstadoPersonagem estadoAtual = EstadoPersonagem.Idle;
 
-    CinemachineFreeLook cinemachineCam = FindObjectOfType<CinemachineFreeLook>();
-    if (cinemachineCam != null)
+    private void Awake()
     {
-        cinemachineCam.Follow = transform;
-        cinemachineCam.LookAt = transform;
-    }
-    else
-    {
-        Debug.LogError("Cinemachine Free Look não encontrado na cena.");
+        rb = GetComponent<Rigidbody>();
+        animador = GetComponent<Animator>();
+
+        // Valida se os componentes essenciais estão presentes
+        if (animador == null)
+        {
+            Debug.LogError("Animator não encontrado no GameObject!", this);
+        }
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody não encontrado no GameObject!", this);
+        }
     }
 
-    if (Camera.main != null)
+    private IEnumerator Start()
     {
-        cameraTransform = Camera.main.transform;
-    }
-    else
-    {
-        Debug.LogError("Camera principal não encontrada.");
-    }
-}
+        // Configuração da Cinemachine Free Look
+        cinemachineCam = FindObjectOfType<CinemachineFreeLook>();
+        if (cinemachineCam != null)
+        {
+            cinemachineCam.Follow = transform;
+            cinemachineCam.LookAt = transform;
+            cinemachineCam.m_XAxis.Value = 0f; // Ajusta ângulo inicial horizontal
+            cinemachineCam.m_YAxis.Value = 0.5f; // Ajusta ângulo inicial vertical
+        }
+        else
+        {
+            Debug.LogError("Cinemachine Free Look não foi encontrada na cena.", this);
+        }
 
+        // Aguarda até que os componentes estejam carregados
+        yield return GameInitializer.Instance.InicializarComponentes(gameObject);
+
+        // Verifique os componentes após a inicialização
+        staminaManagerMultiplayer = GetComponent<StaminaPersonagemMultiplayer>();
+        if (staminaManagerMultiplayer == null)
+        {
+            Debug.LogError("StaminaPersonagemMultiplayer ainda não encontrado após inicialização!", this);
+        }
+        else
+        {
+            Debug.Log("StaminaPersonagemMultiplayer carregado com sucesso.", this);
+        }
+
+        if (!photonView.IsMine)
+        {
+            rb.isKinematic = true; // Desativa física para jogadores remotos
+        }
+        else
+        {
+            rb.isKinematic = false; // Ativa física para o jogador local
+        }
+    }
 
     private void Update()
     {
-        if (!photonView.IsMine) return; // Executa o movimento apenas para o primeiro jogador
+        if (!photonView.IsMine) return; // Apenas o jogador local controla o movimento
 
-        groundedPlayer = controller.isGrounded;
+        AtualizarEstado();
 
-        if (groundedPlayer && playerVelocity.y < 0)
+        if (usandoRigidbody)
         {
-            playerVelocity.y = 0f;
+            MoverNaAgua();
+        }
+        else
+        {
+            MoverPersonagem();
         }
 
-        Vector3 move = new Vector3(movimentoInput.x, 0, movimentoInput.y);
-        move = move.x * cameraTransform.right + move.z * cameraTransform.forward;
-        move.y = 0f;
-
-        controller.Move(move * Time.deltaTime * playerSpeed);
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
-
-        bool isWalking = movimentoInput.sqrMagnitude > 0.1f;
-        anim.SetBool("isWalking", isWalking);
-
-        if (isWalking && move != Vector3.zero)
+        // Reduz a velocidade gradualmente
+        if (velocidadeAtual > velocidadeBase)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(move);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
+            velocidadeAtual -= incrementoVelocidade * Time.deltaTime;
+            if (velocidadeAtual < velocidadeBase)
+            {
+                velocidadeAtual = velocidadeBase;
+            }
         }
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnMover(InputAction.CallbackContext context)
     {
-        if (!photonView.IsMine) return; // Garante que apenas o primeiro jogador manipule o input
+        if (!photonView.IsMine) return;
 
-        movimentoInput = context.ReadValue<Vector2>();
+        inputMovimento = context.ReadValue<Vector2>();
+    }
+
+    public void OnToqueNoPainel()
+    {
+        if (!photonView.IsMine) return;
+
+        if (!usandoRigidbody && staminaManagerMultiplayer.ConsumirStamina())
+        {
+            velocidadeAtual = Mathf.Min(velocidadeAtual + incrementoVelocidade, velocidadeMaxima);
+        }
+    }
+
+    private void AtualizarEstado()
+    {
+        bool naAgua = waterFloatMultiplayer != null && waterFloatMultiplayer.EstaNaAgua;
+        bool movendo = inputMovimento.magnitude > 0.1f;
+
+        if (naAgua)
+        {
+            if (movendo)
+                TrocarEstado(EstadoPersonagem.Swimming);
+            else
+                TrocarEstado(EstadoPersonagem.IdleSwimming);
+        }
+        else
+        {
+            if (movendo)
+                TrocarEstado(velocidadeAtual > velocidadeBase ? EstadoPersonagem.Running : EstadoPersonagem.Walking);
+            else
+                TrocarEstado(EstadoPersonagem.Idle);
+        }
+    }
+
+    private void TrocarEstado(EstadoPersonagem novoEstado)
+    {
+        if (estadoAtual == novoEstado) return;
+
+        estadoAtual = novoEstado;
+
+        if (animador == null)
+        {
+            Debug.LogError("Animator está ausente. Não é possível trocar o estado!", this);
+            return;
+        }
+
+        animador.SetBool("isIdle", false);
+        animador.SetBool("isWalking", false);
+        animador.SetBool("isRunning", false);
+        animador.SetBool("isIdleSwimming", false);
+        animador.SetBool("isSwimming", false);
+
+        switch (estadoAtual)
+        {
+            case EstadoPersonagem.Idle:
+                animador.SetBool("isIdle", true);
+                break;
+            case EstadoPersonagem.Walking:
+                animador.SetBool("isWalking", true);
+                break;
+            case EstadoPersonagem.Running:
+                animador.SetBool("isRunning", true);
+                break;
+            case EstadoPersonagem.IdleSwimming:
+                animador.SetBool("isIdleSwimming", true);
+                break;
+            case EstadoPersonagem.Swimming:
+                animador.SetBool("isSwimming", true);
+                break;
+        }
+    }
+
+    private void MoverPersonagem()
+    {
+        if (mainCamera == null) return;
+
+        Vector3 frente = mainCamera.transform.forward;
+        Vector3 direita = mainCamera.transform.right;
+
+        frente.y = 0f;
+        direita.y = 0f;
+        frente.Normalize();
+        direita.Normalize();
+
+        direcaoMovimento = frente * inputMovimento.y + direita * inputMovimento.x;
+
+        if (direcaoMovimento.magnitude > 0.1f)
+        {
+            Quaternion rotacaoAlvo = Quaternion.LookRotation(direcaoMovimento);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotacaoAlvo, Time.deltaTime * 10f);
+        }
+
+        rb.velocity = direcaoMovimento * velocidadeAtual;
+    }
+
+    private void MoverNaAgua()
+    {
+        if (inputMovimento.magnitude > 0.1f)
+        {
+            Vector3 movimento = new Vector3(inputMovimento.x, 0, inputMovimento.y);
+            movimento = mainCamera.transform.TransformDirection(movimento);
+            movimento.y = 0f;
+
+            Vector3 desiredVelocity = movimento.normalized * velocidadeAtual;
+            rb.velocity = Vector3.Lerp(rb.velocity, desiredVelocity, Time.deltaTime * 2f);
+
+            Quaternion rotacaoAlvo = Quaternion.LookRotation(movimento.normalized);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotacaoAlvo, Time.deltaTime * 5f);
+        }
+        else
+        {
+            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, Time.deltaTime * 2f);
+        }
+    }
+
+    private void AtivarMovimentoNaAgua()
+    {
+        usandoRigidbody = true;
+        rb.isKinematic = false;
+        rb.drag = 5f;
+        rb.angularDrag = 2f;
+    }
+
+    private void AtivarMovimentoEmTerra()
+    {
+        usandoRigidbody = false;
+        rb.isKinematic = true;
+        rb.drag = 0f;
+        rb.angularDrag = 0.05f;
+    }
+
+    public bool EstaMovendo()
+    {
+        return direcaoMovimento.magnitude > 0.1f;
     }
 }
