@@ -49,11 +49,15 @@ public class RaftController : MonoBehaviour
         movimentoInput = context.ReadValue<Vector2>();
         Debug.Log("Movimento Input: " + movimentoInput); // Log para confirmar que o input está chegando
     }
-    public void Mover(Vector2 direcao)
+   public void Mover(Vector2 movimentoInput)
 {
-    // Lógica para movimentar a jangada com base na entrada
-    Debug.Log($"Movendo jangada na direção: {direcao}");
+    if (!enabled) return; // Apenas processa input se o controle estiver ativo
+
+    // Lógica de movimentação da jangada
+    Debug.Log($"Movimentando jangada com input: {movimentoInput}");
+    // Exemplo: Aplicação de força ou rotação na jangada
 }
+
 
     public void ToggleMovement()
     {

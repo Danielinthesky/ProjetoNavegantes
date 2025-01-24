@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private bool debounce = false;
     public GameObject canvasMovimentacao; // Canvas com botões de Correr, Pular e Ação
     public GameObject canvasNavegacao;   // Canvas com botões de Navegar e Sair da navegação
+    public GameObject actionButton;
 
     
 
@@ -65,6 +66,13 @@ public class PlayerController : MonoBehaviour
         if (playerInput == null)
         {
             Debug.LogError("PlayerInput não encontrado no GameObject!");
+        }
+
+        var navegarActionMap = playerInput.actions.FindActionMap("Navegar");
+        if (navegarActionMap == null)
+        {
+            Debug.LogError("Action Map 'Navegar' não encontrado no InputActionAsset!");
+            return;
         }
     }
 
@@ -176,23 +184,29 @@ public void OnMover(InputAction.CallbackContext contexto)
 {
     Vector2 movimentoInput = contexto.ReadValue<Vector2>();
 
-    if (navegando) // Caso esteja navegando
+    if (navegando) // Controle da jangada
     {
         if (raftController != null)
         {
-            raftController.Mover(movimentoInput); // Controle da jangada
+            raftController.Mover(movimentoInput); // Passa o input para a jangada
             Debug.Log($"Controlando a jangada com input: {movimentoInput}");
+        }
+        else
+        {
+            Debug.LogError("raftController não atribuído!");
         }
         return; // Sai da função após controlar a jangada
     }
 
-    // Caso contrário, movimenta o personagem normalmente
+    // Controle do personagem
     if (movimento != null)
     {
-        movimento.OnMover(movimentoInput); // Controle do personagem
+        movimento.OnMover(movimentoInput); // Passa o input para o personagem
         Debug.Log($"Controlando o personagem com input: {movimentoInput}");
     }
 }
+
+
 
 
 
@@ -315,6 +329,8 @@ private bool EhSuperficiePlana(Vector3 normal)
 
         
     }
+
+    actionButton.SetActive(true);
 }
 
 
@@ -336,6 +352,8 @@ private void OnTriggerExit(Collider other)
             contextoAtual = TipoAcao.Nenhum;
                
         }
+
+        actionButton.SetActive(false);
 }
 
 private IEnumerator AguardarFimAnimacaoColeta()
@@ -369,41 +387,35 @@ private void IniciarNavegacao()
         return;
     }
 
-    if (playerInput == null)
-    {
-        Debug.LogError("PlayerInput não atribuído no PlayerController!");
-        return;
-    }
-
-    // Verifique se o Action Map 'Navegar' existe
-    var navegarActionMap = playerInput.actions.FindActionMap("Navegar");
-    if (navegarActionMap == null)
-    {
-        Debug.LogError("Action Map 'Navegar' não encontrado no InputActionAsset!");
-        return;
-    }
-
-    // Desativa o controle do personagem
+    // Desativa o movimento do personagem
     movimento.enabled = false;
-    rb.isKinematic = true;
 
     // Ativa o controle da jangada
     raftController.enabled = true;
-    playerInput.currentActionMap.Disable();
-    // Troca o Action Map para 'Navegar'
-    playerInput.SwitchCurrentActionMap("Navegar");
-    Debug.Log($"Action Map Atual após troca: {playerInput.currentActionMap?.name}");
 
-    // Alterna Canvas
+    // Troca Action Map (opcional)
+    playerInput.SwitchCurrentActionMap("Navegar");
+
+    // Alterna câmeras
+    AtivarCamera(freeLookRaft, freeLookPlayer);
+
+    // Alterna UI
     canvasMovimentacao.SetActive(false);
     canvasNavegacao.SetActive(true);
-
-    // Troca a câmera
-    AtivarCamera(freeLookRaft, freeLookPlayer);
 
     Debug.Log("Navegação iniciada com sucesso!");
 }
 
+
+
+private IEnumerator TrocarActionMapAposFrame(string novoActionMap)
+{
+    yield return new WaitForEndOfFrame(); // Espera o frame atual terminar
+    InputSystem.ResetHaptics(); // Limpa possíveis eventos presos no buffer
+
+    playerInput.SwitchCurrentActionMap(novoActionMap);
+    Debug.Log($"Action Map trocado para: {playerInput.currentActionMap?.name}");
+}
 
 
 
@@ -411,22 +423,26 @@ private void FinalizarNavegacao()
 {
     navegando = false;
 
-    // Retorna o controle ao personagem
-    playerInput.SwitchCurrentActionMap("Wendell");
+    // Reativa o controle do personagem
+    movimento.enabled = true;
 
     // Desativa o controle da jangada
-    if (raftController != null)
-    {
-        raftController.GetComponent<PlayerInput>().enabled = false;
-    }
+    raftController.enabled = false;
 
-    // Ativa o Canvas de movimentação e desativa o Canvas de navegação
-    if (canvasMovimentacao != null) canvasMovimentacao.SetActive(true);
-    if (canvasNavegacao != null) canvasNavegacao.SetActive(false);
+    // Troca Action Map (opcional)
+    playerInput.SwitchCurrentActionMap("Wendell");
 
-    // Troca de volta para a câmera do personagem
+    // Alterna câmeras
     AtivarCamera(freeLookPlayer, freeLookRaft);
+
+    // Alterna UI
+    canvasMovimentacao.SetActive(true);
+    canvasNavegacao.SetActive(false);
+
+    Debug.Log("Navegação finalizada com sucesso!");
 }
+
+
 
 
 
