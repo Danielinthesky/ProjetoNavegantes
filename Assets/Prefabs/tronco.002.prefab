@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6038419624374197347}
   - component: {fileID: 6794737006774888359}
   - component: {fileID: -601874426903847022}
+  - component: {fileID: 4207422687116090218}
   m_Layer: 0
   m_Name: tronco.002
   m_TagString: Untagged
@@ -113,3 +114,25 @@ LODGroup:
     renderers:
     - renderer: {fileID: 6794737006774888359}
   m_Enabled: 1
+--- !u!64 &4207422687116090218
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9135632362152988395}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6794900299043386436, guid: c2c352c59d041b74b996850e922c9900, type: 3}
