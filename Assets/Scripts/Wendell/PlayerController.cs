@@ -51,6 +51,18 @@ public class PlayerController : MonoBehaviour
 
     
 
+void OnEnable()
+{
+    playerInput.actions.Enable();
+    Debug.Log("Input Actions habilitados.");
+}
+
+void OnDisable()
+{
+    playerInput.actions.Disable();
+    Debug.Log("Input Actions desabilitados.");
+}
+
 
     void Awake()
     {
@@ -68,7 +80,7 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("PlayerInput não encontrado no GameObject!");
         }
 
-        var navegarActionMap = playerInput.actions.FindActionMap("Navegar");
+        var navegarActionMap = playerInput.actions.FindActionMap("Jangada");
         if (navegarActionMap == null)
         {
             Debug.LogError("Action Map 'Navegar' não encontrado no InputActionAsset!");
@@ -121,34 +133,9 @@ public enum TipoAcao
 
 public void OnActionButtonPressed()
 {
-    if (debounce) return;
-
-    debounce = true;
-
-    Debug.Log($"Botão de ação pressionado. Contexto atual: {contextoAtual}");
-
-    switch (contextoAtual)
-    {
-        case TipoAcao.Navegar:
-            if (!navegando)
-            {
-                Debug.Log("Iniciando navegação.");
-                IniciarNavegacao();
-            }
-            else
-            {
-                Debug.Log("Finalizando navegação.");
-                FinalizarNavegacao();
-            }
-            break;
-
-        default:
-            Debug.Log("Nenhuma ação disponível no momento.");
-            break;
-    }
-
-    StartCoroutine(ResetDebounce());
+    Debug.Log("O botão está funcionando!");
 }
+
 
 
 private void ColetarObjeto()
@@ -220,7 +207,7 @@ private bool EhSuperficiePlana(Vector3 normal)
 }
 
     public void OnPular(InputAction.CallbackContext contexto)
-{
+{ Debug.Log("Botão de pulo pressionado!");
     if (contexto.performed && EstaNoChao || EstaNaAgua)
     {
         alturaInicialPulo = transform.position.y;
@@ -244,7 +231,10 @@ private bool EhSuperficiePlana(Vector3 normal)
 }
 
 
-
+ public void TestarBotao()
+    {
+        Debug.Log("Botão clicado!");
+    }
 
     public void OnCorrer(InputAction.CallbackContext contexto)
 {
@@ -279,23 +269,20 @@ private bool EhSuperficiePlana(Vector3 normal)
     private void OnTriggerEnter(Collider other)
 {
     if (other.CompareTag("Navegar"))
+{
+    Debug.Log("Entrou no trigger 'Navegar'.");
+    raftController = other.GetComponentInParent<RaftController>();
+    if (raftController == null)
     {
-        
-
-        // Atualiza o contexto para Navegar
-        contextoAtual = TipoAcao.Navegar;
-
-   
-
-        // Busca o RaftController no objeto pai da referência "Navegar"
-        raftController = other.GetComponentInParent<RaftController>();
-
-        if (raftController == null)
-        {
-            Debug.LogError("RaftController não encontrado no objeto pai do Leme.");
-        }
-        
+        Debug.LogError("RaftController não encontrado no objeto pai!");
     }
+    else
+    {
+        Debug.Log("RaftController atribuído com sucesso.");
+        contextoAtual = TipoAcao.Navegar;
+    }
+}
+
     if (other.CompareTag("Agua"))
     {
         EstaNaAgua = true;
@@ -379,13 +366,14 @@ private IEnumerator AguardarFimAnimacaoColeta()
 
 private void IniciarNavegacao()
 {
-    navegando = true;
-
+    Debug.Log("IniciarNavegacao chamado.");
     if (raftController == null)
     {
-        Debug.LogError("raftController não atribuído no PlayerController!");
+        Debug.LogError("RaftController é null! Não é possível iniciar navegação.");
         return;
     }
+
+    navegando = true;
 
     // Desativa o movimento do personagem
     movimento.enabled = false;
@@ -393,8 +381,8 @@ private void IniciarNavegacao()
     // Ativa o controle da jangada
     raftController.enabled = true;
 
-    // Troca Action Map (opcional)
-    playerInput.SwitchCurrentActionMap("Navegar");
+    // Troca Action Map
+    playerInput.SwitchCurrentActionMap("Jangada");
 
     // Alterna câmeras
     AtivarCamera(freeLookRaft, freeLookPlayer);
@@ -405,6 +393,7 @@ private void IniciarNavegacao()
 
     Debug.Log("Navegação iniciada com sucesso!");
 }
+
 
 
 

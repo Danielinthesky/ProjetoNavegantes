@@ -5,7 +5,7 @@ using Cinemachine;
 public class CameraLook : MonoBehaviour
 {
     private CinemachineFreeLook cinemachine;
-    private Player playerInput; // Classe gerada pelo Input System
+    private Jogador playerInput; // Classe gerada pelo Input System
 
     [Header("Configurações de Sensibilidade")]
     [SerializeField] private float lookSpeed = 200f; // Sensibilidade do eixo X
@@ -16,7 +16,7 @@ public class CameraLook : MonoBehaviour
 
     private void Awake()
     {
-        playerInput = new Player();
+        playerInput = new Jogador();
         cinemachine = GetComponent<CinemachineFreeLook>();
         
         // Ativa controle manual do InputAxis
