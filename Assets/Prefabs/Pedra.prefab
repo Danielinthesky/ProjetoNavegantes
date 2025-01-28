@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2964493469204420122}
   - component: {fileID: 4223588763186201926}
   - component: {fileID: -4656842643959831814}
+  - component: {fileID: 3039928877526468569}
   m_Layer: 0
   m_Name: Pedra
   m_TagString: Untagged
@@ -111,3 +112,26 @@ LODGroup:
     renderers:
     - renderer: {fileID: 0}
   m_Enabled: 1
+--- !u!136 &3039928877526468569
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7771703650647077181}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.12
+  m_Height: 1.11
+  m_Direction: 1
+  m_Center: {x: -0.02, y: 0.06, z: -1.3}
