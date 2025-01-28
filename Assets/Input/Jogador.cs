@@ -77,7 +77,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e21586ba-bfb9-4af7-a845-47d6f18fc791"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -176,7 +176,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8e434187-484d-43c6-b723-7a6ad03f557b"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

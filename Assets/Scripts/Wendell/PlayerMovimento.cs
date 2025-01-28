@@ -7,6 +7,7 @@ public class PlayerMovimento : MonoBehaviour
 
     [Header("Configurações de Movimentação")]
     public float velocidadeMovimento = 5f;
+    public float forcaPulo = 5f;
     public float multiplicadorCorrida = 1.5f;
     public float velocidadeRotacao = 10f;
     public float fatorForca = 0.5f;

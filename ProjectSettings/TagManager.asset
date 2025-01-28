@@ -21,6 +21,7 @@ TagManager:
   - Climb1
   - Coletavel
   - Navegar
+  - Quest
   layers:
   - Default
   - TransparentFX
