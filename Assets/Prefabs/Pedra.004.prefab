@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7107282401506224627}
   - component: {fileID: 2461555411933670239}
   - component: {fileID: 32414888650751655}
-  - component: {fileID: 5376685988259914028}
+  - component: {fileID: -6316310561099926906}
   m_Layer: 0
   m_Name: Pedra.004
   m_TagString: Untagged
@@ -112,8 +112,8 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2461555411933670239}
   m_Enabled: 1
---- !u!64 &5376685988259914028
-MeshCollider:
+--- !u!65 &-6316310561099926906
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -130,7 +130,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7981808137550449873, guid: 81e85ba3f7aa4eb4e9239d7f77d04dca, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.23, y: 2.67, z: 2.18}
+  m_Center: {x: 0.1150337, y: 0.8561411, z: -1.130954}

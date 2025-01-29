@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2964493469204420122}
   - component: {fileID: 4223588763186201926}
   - component: {fileID: -4656842643959831814}
-  - component: {fileID: 3039928877526468569}
+  - component: {fileID: -8230298670282814138}
   m_Layer: 0
   m_Name: Pedra
   m_TagString: Untagged
@@ -102,18 +102,18 @@ LODGroup:
   - screenRelativeHeight: 0.999
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 0}
+    - renderer: {fileID: 4223588763186201926}
   - screenRelativeHeight: 0.30524945
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 0}
+    - renderer: {fileID: 4223588763186201926}
   - screenRelativeHeight: 0.07964496
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 0}
+    - renderer: {fileID: 4223588763186201926}
   m_Enabled: 1
---- !u!136 &3039928877526468569
-CapsuleCollider:
+--- !u!65 &-8230298670282814138
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -130,8 +130,6 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.12
-  m_Height: 1.11
-  m_Direction: 1
-  m_Center: {x: -0.02, y: 0.06, z: -1.3}
+  serializedVersion: 3
+  m_Size: {x: 1.64, y: 1.28, z: 2.02}
+  m_Center: {x: -0.03216651, y: 0.3952024, z: -1.129927}
