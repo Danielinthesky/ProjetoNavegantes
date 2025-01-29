@@ -49,13 +49,22 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "NavegarSelecaoInteracao",
+                    "type": "Value",
+                    "id": "74816836-60e4-44ab-b2eb-a514144fee72",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "e21586ba-bfb9-4af7-a845-47d6f18fc791",
-                    "path": "<Gamepad>/leftStick/down",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -154,13 +163,57 @@
                 {
                     "name": "",
                     "id": "8e434187-484d-43c6-b723-7a6ad03f557b",
-                    "path": "<Gamepad>/rightStick/down",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Camera",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "55a02cfe-9607-4164-9e04-ca4deb4a47a4",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NavegarSelecaoInteracao",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "f16ac99a-5e4a-4271-9216-43140a09314a",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NavegarSelecaoInteracao",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "c2ffdb78-a209-4c9b-bfbd-7d37affde5f1",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NavegarSelecaoInteracao",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "32e4988f-d7fb-4d8c-9983-522c910bc3c6",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NavegarSelecaoInteracao",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

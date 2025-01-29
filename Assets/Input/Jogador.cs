@@ -71,13 +71,22 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""NavegarSelecaoInteracao"",
+                    ""type"": ""Value"",
+                    ""id"": ""74816836-60e4-44ab-b2eb-a514144fee72"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""e21586ba-bfb9-4af7-a845-47d6f18fc791"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -176,13 +185,57 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8e434187-484d-43c6-b723-7a6ad03f557b"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Camera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""55a02cfe-9607-4164-9e04-ca4deb4a47a4"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavegarSelecaoInteracao"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""f16ac99a-5e4a-4271-9216-43140a09314a"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavegarSelecaoInteracao"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""c2ffdb78-a209-4c9b-bfbd-7d37affde5f1"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavegarSelecaoInteracao"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""32e4988f-d7fb-4d8c-9983-522c910bc3c6"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavegarSelecaoInteracao"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -299,6 +352,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
         m_Wendell_Pular = m_Wendell.FindAction("Pular", throwIfNotFound: true);
         m_Wendell_Interagir = m_Wendell.FindAction("Interagir", throwIfNotFound: true);
         m_Wendell_Camera = m_Wendell.FindAction("Camera", throwIfNotFound: true);
+        m_Wendell_NavegarSelecaoInteracao = m_Wendell.FindAction("NavegarSelecaoInteracao", throwIfNotFound: true);
         // Jangada
         m_Jangada = asset.FindActionMap("Jangada", throwIfNotFound: true);
         m_Jangada_MoverJangada = m_Jangada.FindAction("MoverJangada", throwIfNotFound: true);
@@ -369,6 +423,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
     private readonly InputAction m_Wendell_Pular;
     private readonly InputAction m_Wendell_Interagir;
     private readonly InputAction m_Wendell_Camera;
+    private readonly InputAction m_Wendell_NavegarSelecaoInteracao;
     public struct WendellActions
     {
         private @Jogador m_Wrapper;
@@ -378,6 +433,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
         public InputAction @Pular => m_Wrapper.m_Wendell_Pular;
         public InputAction @Interagir => m_Wrapper.m_Wendell_Interagir;
         public InputAction @Camera => m_Wrapper.m_Wendell_Camera;
+        public InputAction @NavegarSelecaoInteracao => m_Wrapper.m_Wendell_NavegarSelecaoInteracao;
         public InputActionMap Get() { return m_Wrapper.m_Wendell; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -402,6 +458,9 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
             @Camera.started += instance.OnCamera;
             @Camera.performed += instance.OnCamera;
             @Camera.canceled += instance.OnCamera;
+            @NavegarSelecaoInteracao.started += instance.OnNavegarSelecaoInteracao;
+            @NavegarSelecaoInteracao.performed += instance.OnNavegarSelecaoInteracao;
+            @NavegarSelecaoInteracao.canceled += instance.OnNavegarSelecaoInteracao;
         }
 
         private void UnregisterCallbacks(IWendellActions instance)
@@ -421,6 +480,9 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
             @Camera.started -= instance.OnCamera;
             @Camera.performed -= instance.OnCamera;
             @Camera.canceled -= instance.OnCamera;
+            @NavegarSelecaoInteracao.started -= instance.OnNavegarSelecaoInteracao;
+            @NavegarSelecaoInteracao.performed -= instance.OnNavegarSelecaoInteracao;
+            @NavegarSelecaoInteracao.canceled -= instance.OnNavegarSelecaoInteracao;
         }
 
         public void RemoveCallbacks(IWendellActions instance)
@@ -499,6 +561,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
         void OnPular(InputAction.CallbackContext context);
         void OnInteragir(InputAction.CallbackContext context);
         void OnCamera(InputAction.CallbackContext context);
+        void OnNavegarSelecaoInteracao(InputAction.CallbackContext context);
     }
     public interface IJangadaActions
     {

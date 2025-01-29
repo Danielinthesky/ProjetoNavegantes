@@ -47,7 +47,8 @@ public class RaftController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         movimentoInput = context.ReadValue<Vector2>();
-        Debug.Log("Movimento Input: " + movimentoInput); // Log para confirmar que o input está chegando
+        
+        
     }
    public void Mover(Vector2 movimentoInput)
 {

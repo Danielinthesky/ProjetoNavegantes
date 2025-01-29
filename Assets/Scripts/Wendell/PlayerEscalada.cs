@@ -54,6 +54,7 @@ public class PlayerEscalada : MonoBehaviour
     animador.speed = 1; // Garante que a animação esteja ativa inicialmente
 
     Debug.Log("Escalada iniciada");
+    GetComponent<PlayerController>().AtivarEscalada();
 }
 
 
@@ -66,37 +67,47 @@ public class PlayerEscalada : MonoBehaviour
     animador.speed = 1; // Garante que a animação volte ao normal
 
     Debug.Log("Escalada finalizada");
+    GetComponent<PlayerController>().AtivarMovimento();
 }
 
 
 
 
 
-    public void OnMover(Vector2 movimento)
-    {
-        entradaMovimento = movimento;
-    }
-
-    private void ControlarEscalada()
+public void OnMover(Vector2 movimento)
 {
+        entradaMovimento = movimento;
+}
+
+private void ControlarEscalada()
+{
+    ManterNaSuperficie();
+    // Calcula o movimento vertical e horizontal com base na entrada do jogador
     float movimentoVertical = entradaMovimento.y * velocidadeEscalada * Time.fixedDeltaTime;
-    Vector3 novaPosicao = rb.position + new Vector3(0, movimentoVertical, 0);
+    float movimentoHorizontal = entradaMovimento.x * velocidadeEscalada * Time.fixedDeltaTime;
+
+    // Cria a nova posição combinando movimento vertical e horizontal
+    Vector3 novaPosicao = rb.position + new Vector3(movimentoHorizontal, movimentoVertical, 0);
+
+    // Move o Rigidbody para a nova posição
     rb.MovePosition(novaPosicao);
 
-    // Atualiza a animação apenas se houver movimento vertical
-    if (Mathf.Abs(entradaMovimento.y) > 0.1f)
+    // Atualiza a animação se houver movimento
+    if (Mathf.Abs(entradaMovimento.y) > 0.1f || Mathf.Abs(entradaMovimento.x) > 0.1f)
     {
-        animador.SetFloat("VelocidadeEscalada", entradaMovimento.y); // Define a direção da escalada
+        animador.SetFloat("VelocidadeEscalada", entradaMovimento.y); // Define a direção vertical da escalada
+        animador.SetFloat("DirecaoEscalada", entradaMovimento.x);   // Define a direção horizontal da escalada
         animador.speed = 1; // A animação avança
     }
     else
     {
-        animador.speed = 0; // Pausa a animação no último frame
+        animador.speed = 0; // Pausa a animação
     }
 }
 
 
-    private bool DetectarSuperficieEscalavel()
+
+private bool DetectarSuperficieEscalavel()
 {
     if (pontoRaio == null)
     {
@@ -109,9 +120,7 @@ public class PlayerEscalada : MonoBehaviour
 
     // Raycast para detectar a superfície escalável
     if (Physics.Raycast(origem, direcao, out RaycastHit hit, 2.5f, climbableLayer))
-    {
-        Debug.Log($"Escalando: Raycast atingiu {hit.collider.name}");
-
+    {   
         // Verifica se a superfície atingida é plana (normal próxima de Vector3.up)
         if (Vector3.Angle(hit.normal, Vector3.up) < 45f)
         {
@@ -125,6 +134,28 @@ public class PlayerEscalada : MonoBehaviour
     Debug.Log("Escalada: Nenhuma superfície escalável detectada.");
     return false;
 }
+
+private void ManterNaSuperficie()
+{
+    // Origem do raio: ponto central do personagem
+    Vector3 origemRaio = transform.position + transform.forward * 0.5f;
+
+    // Direção do raio: em direção à superfície escalável
+    Vector3 direcaoRaio = -transform.forward;
+
+    // Raycast para detectar a superfície escalável
+    if (Physics.Raycast(origemRaio, direcaoRaio, out RaycastHit hit, 2f, climbableLayer))
+    {
+        // Ajusta a posição do personagem para ficar próximo à superfície
+        Vector3 posicaoAjustada = hit.point + hit.normal * 0.1f; // Adiciona uma pequena distância para evitar interseção
+        rb.position = new Vector3(posicaoAjustada.x, rb.position.y, posicaoAjustada.z);
+    }
+    else
+    {
+        Debug.LogWarning("O personagem está se afastando da superfície escalável!");
+    }
+}
+
 
 
 
