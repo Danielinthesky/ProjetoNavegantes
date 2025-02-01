@@ -80,6 +80,15 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ConfirmarSelecao"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b3e8c7a-d0e2-4290-8221-088c5416a58e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -236,6 +245,17 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
                     ""action"": ""NavegarSelecaoInteracao"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0d68688-764d-4299-b304-8ebb81bd6574"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ConfirmarSelecao"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -341,6 +361,94 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Menu"",
+            ""id"": ""f9e4431d-6dc8-40a5-a0c8-e0d29efe12d8"",
+            ""actions"": [
+                {
+                    ""name"": ""ToogleMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""7619a0d8-c9bb-4c01-9df4-b425076aea67"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextTab"",
+                    ""type"": ""Button"",
+                    ""id"": ""12b99168-ae09-4301-940c-949139e96fb9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PreviousTab"",
+                    ""type"": ""Button"",
+                    ""id"": ""b76cfd39-d468-4af1-aa7b-341109594f1a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Confirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""a586e12e-0abb-4fd4-9b1a-4f13f8454f5f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e57bea42-474a-4551-8b28-3f2ad005dcec"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToogleMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""544cffca-4b25-414c-8548-dc5c55d0d65f"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextTab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9efe8569-eee6-46b5-ba39-8ef7c50f81f4"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PreviousTab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ccf7eae2-4062-4cfe-a1d6-beb927d69b15"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -353,10 +461,17 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
         m_Wendell_Interagir = m_Wendell.FindAction("Interagir", throwIfNotFound: true);
         m_Wendell_Camera = m_Wendell.FindAction("Camera", throwIfNotFound: true);
         m_Wendell_NavegarSelecaoInteracao = m_Wendell.FindAction("NavegarSelecaoInteracao", throwIfNotFound: true);
+        m_Wendell_ConfirmarSelecao = m_Wendell.FindAction("ConfirmarSelecao", throwIfNotFound: true);
         // Jangada
         m_Jangada = asset.FindActionMap("Jangada", throwIfNotFound: true);
         m_Jangada_MoverJangada = m_Jangada.FindAction("MoverJangada", throwIfNotFound: true);
         m_Jangada_IniciarNavegacao = m_Jangada.FindAction("IniciarNavegacao", throwIfNotFound: true);
+        // Menu
+        m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
+        m_Menu_ToogleMenu = m_Menu.FindAction("ToogleMenu", throwIfNotFound: true);
+        m_Menu_NextTab = m_Menu.FindAction("NextTab", throwIfNotFound: true);
+        m_Menu_PreviousTab = m_Menu.FindAction("PreviousTab", throwIfNotFound: true);
+        m_Menu_Confirm = m_Menu.FindAction("Confirm", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -424,6 +539,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
     private readonly InputAction m_Wendell_Interagir;
     private readonly InputAction m_Wendell_Camera;
     private readonly InputAction m_Wendell_NavegarSelecaoInteracao;
+    private readonly InputAction m_Wendell_ConfirmarSelecao;
     public struct WendellActions
     {
         private @Jogador m_Wrapper;
@@ -434,6 +550,7 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
         public InputAction @Interagir => m_Wrapper.m_Wendell_Interagir;
         public InputAction @Camera => m_Wrapper.m_Wendell_Camera;
         public InputAction @NavegarSelecaoInteracao => m_Wrapper.m_Wendell_NavegarSelecaoInteracao;
+        public InputAction @ConfirmarSelecao => m_Wrapper.m_Wendell_ConfirmarSelecao;
         public InputActionMap Get() { return m_Wrapper.m_Wendell; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -461,6 +578,9 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
             @NavegarSelecaoInteracao.started += instance.OnNavegarSelecaoInteracao;
             @NavegarSelecaoInteracao.performed += instance.OnNavegarSelecaoInteracao;
             @NavegarSelecaoInteracao.canceled += instance.OnNavegarSelecaoInteracao;
+            @ConfirmarSelecao.started += instance.OnConfirmarSelecao;
+            @ConfirmarSelecao.performed += instance.OnConfirmarSelecao;
+            @ConfirmarSelecao.canceled += instance.OnConfirmarSelecao;
         }
 
         private void UnregisterCallbacks(IWendellActions instance)
@@ -483,6 +603,9 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
             @NavegarSelecaoInteracao.started -= instance.OnNavegarSelecaoInteracao;
             @NavegarSelecaoInteracao.performed -= instance.OnNavegarSelecaoInteracao;
             @NavegarSelecaoInteracao.canceled -= instance.OnNavegarSelecaoInteracao;
+            @ConfirmarSelecao.started -= instance.OnConfirmarSelecao;
+            @ConfirmarSelecao.performed -= instance.OnConfirmarSelecao;
+            @ConfirmarSelecao.canceled -= instance.OnConfirmarSelecao;
         }
 
         public void RemoveCallbacks(IWendellActions instance)
@@ -554,6 +677,76 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
         }
     }
     public JangadaActions @Jangada => new JangadaActions(this);
+
+    // Menu
+    private readonly InputActionMap m_Menu;
+    private List<IMenuActions> m_MenuActionsCallbackInterfaces = new List<IMenuActions>();
+    private readonly InputAction m_Menu_ToogleMenu;
+    private readonly InputAction m_Menu_NextTab;
+    private readonly InputAction m_Menu_PreviousTab;
+    private readonly InputAction m_Menu_Confirm;
+    public struct MenuActions
+    {
+        private @Jogador m_Wrapper;
+        public MenuActions(@Jogador wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ToogleMenu => m_Wrapper.m_Menu_ToogleMenu;
+        public InputAction @NextTab => m_Wrapper.m_Menu_NextTab;
+        public InputAction @PreviousTab => m_Wrapper.m_Menu_PreviousTab;
+        public InputAction @Confirm => m_Wrapper.m_Menu_Confirm;
+        public InputActionMap Get() { return m_Wrapper.m_Menu; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenuActions set) { return set.Get(); }
+        public void AddCallbacks(IMenuActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MenuActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MenuActionsCallbackInterfaces.Add(instance);
+            @ToogleMenu.started += instance.OnToogleMenu;
+            @ToogleMenu.performed += instance.OnToogleMenu;
+            @ToogleMenu.canceled += instance.OnToogleMenu;
+            @NextTab.started += instance.OnNextTab;
+            @NextTab.performed += instance.OnNextTab;
+            @NextTab.canceled += instance.OnNextTab;
+            @PreviousTab.started += instance.OnPreviousTab;
+            @PreviousTab.performed += instance.OnPreviousTab;
+            @PreviousTab.canceled += instance.OnPreviousTab;
+            @Confirm.started += instance.OnConfirm;
+            @Confirm.performed += instance.OnConfirm;
+            @Confirm.canceled += instance.OnConfirm;
+        }
+
+        private void UnregisterCallbacks(IMenuActions instance)
+        {
+            @ToogleMenu.started -= instance.OnToogleMenu;
+            @ToogleMenu.performed -= instance.OnToogleMenu;
+            @ToogleMenu.canceled -= instance.OnToogleMenu;
+            @NextTab.started -= instance.OnNextTab;
+            @NextTab.performed -= instance.OnNextTab;
+            @NextTab.canceled -= instance.OnNextTab;
+            @PreviousTab.started -= instance.OnPreviousTab;
+            @PreviousTab.performed -= instance.OnPreviousTab;
+            @PreviousTab.canceled -= instance.OnPreviousTab;
+            @Confirm.started -= instance.OnConfirm;
+            @Confirm.performed -= instance.OnConfirm;
+            @Confirm.canceled -= instance.OnConfirm;
+        }
+
+        public void RemoveCallbacks(IMenuActions instance)
+        {
+            if (m_Wrapper.m_MenuActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMenuActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MenuActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MenuActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MenuActions @Menu => new MenuActions(this);
     public interface IWendellActions
     {
         void OnAndar(InputAction.CallbackContext context);
@@ -562,10 +755,18 @@ public partial class @Jogador: IInputActionCollection2, IDisposable
         void OnInteragir(InputAction.CallbackContext context);
         void OnCamera(InputAction.CallbackContext context);
         void OnNavegarSelecaoInteracao(InputAction.CallbackContext context);
+        void OnConfirmarSelecao(InputAction.CallbackContext context);
     }
     public interface IJangadaActions
     {
         void OnMoverJangada(InputAction.CallbackContext context);
         void OnIniciarNavegacao(InputAction.CallbackContext context);
+    }
+    public interface IMenuActions
+    {
+        void OnToogleMenu(InputAction.CallbackContext context);
+        void OnNextTab(InputAction.CallbackContext context);
+        void OnPreviousTab(InputAction.CallbackContext context);
+        void OnConfirm(InputAction.CallbackContext context);
     }
 }

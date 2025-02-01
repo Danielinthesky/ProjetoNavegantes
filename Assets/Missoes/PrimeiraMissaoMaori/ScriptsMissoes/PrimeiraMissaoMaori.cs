@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.InputSystem;
+
+
 
 public class PrimeiraMissaoMaori : MonoBehaviour
 {
@@ -14,19 +18,43 @@ public class PrimeiraMissaoMaori : MonoBehaviour
     private Coroutine coroutineFala;
     [Header("UI de Seleção")]
     public GameObject painelSelecao; // Painel contendo os botões de Sim/Não
+    public GameObject confirmarSelecao;
     public GameObject botaoSim;
     public GameObject botaoNao;
     private int selecaoAtual = 0; // 0 = Sim, 1 = Não
+    [Header("UI e Câmera")]
+    public GameObject botaoPular;
+    public GameObject botaoCorrer; // Painel contendo o texto da NPC
+    private EstadoConversa estadoAtual = EstadoConversa.Introducao;
+    private bool debounce = false;
+    private enum EstadoConversa
+    
+{
+    Introducao,
+    OrigemNPCs,
+    OrigemVinda,
+    Proposito,
+    AceiteMissao
+}
+
 
     [Header("Missão")]
-    public string falaNPC = "Olá! Tenho uma missão para você. Aceite para começar sua jornada!";
+    public string falaAntesMissao = "Saudações jovem! Você com certeza me lembra alguém... Não consigo lembrar... Sem mais delongas, Pode nos ajudar ? Queremos falar com o Lider Maori sobre comercio de especiarias com o continente Tuaregue, mas ele não quer nos ver nem pintados de ouro, consegue convencer ele a falar com gente ? ";
+    public string falaDepoisMissao = "Ótimo! A missão começou. Boa sorte!";
     public float velocidadeFalaNPC = 0.01f;
     private GameObject npcAtual;
     public bool MissaoAceita = false;
+    private PlayerInteracao playerInteracao;
+   
+  
 
+
+    private void Start()
+    {
+        playerInteracao = GameObject.FindWithTag("Jogador").GetComponent<PlayerInteracao>();
+    }
+    
     public void IniciarInteracao(GameObject npc)
-{
-    if (!MissaoAceita)
     {
         npcAtual = npc;
 
@@ -43,53 +71,69 @@ public class PrimeiraMissaoMaori : MonoBehaviour
         }
 
         textoNPC.text = ""; // Limpa o texto
+        painelInteracao.SetActive(true); // Ativa o painel de interação
 
-        // Ativa o painel de interação e inicia o texto
-        painelInteracao.SetActive(true);
-        coroutineFala = StartCoroutine(ExibirFala(falaNPC));
+        // Decide qual fala exibir com base no estado da missão
+        if (!MissaoAceita)
+        {
+            coroutineFala = StartCoroutine(ExibirFala(falaAntesMissao));
+        }
+        else
+        {
+            coroutineFala = StartCoroutine(ExibirFala(falaDepoisMissao));
+        }
     }
-    else
-    {
-        Debug.Log("Missão já foi aceita, nenhuma nova interação necessária.");
-    }
-}
 
     
-   public void SairInteracao()
+    public void SairInteracao()
     {
+        estadoAtual = EstadoConversa.Introducao; // Reinicia o estado
         cameraNPC.gameObject.SetActive(false);
         cameraJogador.gameObject.SetActive(true);
         cinemachineJogador.SetActive(true);
-
         painelInteracao.SetActive(false);
-        painelSelecao.SetActive(false); // Garante que o painel de seleção é desativado
+        painelSelecao.SetActive(false);
     }
+
 
 
     public void AceitarMissao()
     {
         Debug.Log("Missão aceita!");
+        MissaoAceita = true; // Define que a missão foi aceita
 
-        // Fecha o painel e retorna a câmera do jogador
+        // Fecha o painel e retorna à câmera do jogador
         painelInteracao.SetActive(false);
         cameraNPC.gameObject.SetActive(false);
         cameraJogador.gameObject.SetActive(true);
         cinemachineJogador.SetActive(true);
-
-        // Outras lógicas da missão podem ser adicionadas aqui
     }
+
 
     private void ExibirSelecao()
     {
         painelSelecao.SetActive(true); // Ativa o painel de seleção
-        AtualizarSelecao(); // Atualiza o destaque inicial do botão
+        botaoSim.SetActive(true);
+        botaoNao.SetActive(true);
+        AtualizarTextoBotoes();
     }
 
-    public void NavegarSelecao(Vector2 entrada)
+
+    public void NavegarSelecao(InputAction.CallbackContext contexto)
     {
-        if (Mathf.Abs(entrada.x) > 0.1f) // Apenas considera o movimento horizontal
+        // Verifica se o jogador está interagindo antes de permitir a navegação
+        if (playerInteracao == null || !playerInteracao.interagindo) return;
+
+        Vector2 direcao = contexto.ReadValue<Vector2>();
+
+        if (direcao.x < -0.5f) // Para a esquerda
         {
-            selecaoAtual = entrada.x > 0 ? 1 : 0; // 0 = Sim, 1 = Não
+            selecaoAtual = 0; // Sim
+            AtualizarSelecao();
+        }
+        else if (direcao.x > 0.5f) // Para a direita
+        {
+            selecaoAtual = 1; // Não
             AtualizarSelecao();
         }
     }
@@ -103,35 +147,114 @@ public class PrimeiraMissaoMaori : MonoBehaviour
 
     public void ConfirmarSelecao()
     {
-        if (selecaoAtual == 0)
+        if (debounce) return; // Evita seleção dupla automática
+
+        debounce = true; // Agora o debounce realmente funciona
+        StartCoroutine(ResetDebounce());
+
+        if (selecaoAtual == 0) // Opção A -> Avança no fluxo correto
         {
-            // Jogador escolheu "Sim"
-            Debug.Log("Missão aceita!");
-            MissaoAceita = true;
+            AvancarConversa();
         }
-        else
+        else // Opção B -> Sai da interação e reseta
         {
-            // Jogador escolheu "Não"
-            Debug.Log("Missão recusada!");
+            SairInteracao();
+        }
+    }
+
+
+    private void AvancarConversa()
+    {
+        switch (estadoAtual)
+        {
+            case EstadoConversa.Introducao:
+                estadoAtual = EstadoConversa.OrigemNPCs;
+                break;
+            case EstadoConversa.OrigemNPCs:
+                estadoAtual = EstadoConversa.OrigemVinda;
+                break;
+            case EstadoConversa.OrigemVinda:
+                estadoAtual = EstadoConversa.Proposito;
+                break;
+            case EstadoConversa.Proposito:
+                AceitarMissao();
+                return;
         }
 
-        // Fecha o painel de seleção
-        painelSelecao.SetActive(false);
+        // Agora chamamos a digitação ANTES de exibir os botões
+        StartCoroutine(ExibirFala(textos[estadoAtual]));
+    }
 
-        // Retorna à câmera do jogador
-        SairInteracao();
+
+
+    private void AtualizarTextoBotoes()
+    {
+        // Obtém os componentes TextMeshProUGUI dos botões
+        TextMeshProUGUI textoBotaoA = botaoSim.GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI textoBotaoB = botaoNao.GetComponentInChildren<TextMeshProUGUI>();
+
+        // Define os textos das opções com base no estado atual
+        textoBotaoA.text = opcoes[estadoAtual].Item1;
+        textoBotaoB.text = opcoes[estadoAtual].Item2;
+
+        // Ajusta automaticamente o tamanho da fonte para caber no botão
+        AjustarTamanhoFonte(textoBotaoA);
+        AjustarTamanhoFonte(textoBotaoB);
+    }
+
+
+    private void AjustarTamanhoFonte(TextMeshProUGUI textoBotao)
+    {
+        textoBotao.enableAutoSizing = true; // Ativa o ajuste automático de tamanho
+        textoBotao.fontSizeMin = 14f; // Define um tamanho mínimo para evitar letras muito pequenas
+        textoBotao.fontSizeMax = 30f; // Define um tamanho máximo para evitar textos muito grandes
+        textoBotao.enableWordWrapping = true; // Permite que o texto quebre linha automaticamente
     }
 
 
     private IEnumerator ExibirFala(string texto)
     {
+        painelSelecao.SetActive(false); // Garante que os botões estão ocultos
+        botaoSim.SetActive(false);
+        botaoNao.SetActive(false);
         textoNPC.text = ""; // Limpa o texto antes de iniciar
+
         foreach (char letra in texto)
         {
             textoNPC.text += letra;
-            yield return new WaitForSeconds(velocidadeFalaNPC); // Intervalo entre cada letra
+            yield return new WaitForSeconds(velocidadeFalaNPC); // Digitação letra por letra
         }
 
+        yield return new WaitForSeconds(0.3f); // Pequeno delay antes das opções aparecerem
+
+        // Exibe as opções apenas após o texto ser digitado completamente
         ExibirSelecao();
     }
+
+
+
+
+    private Dictionary<EstadoConversa, string> textos = new Dictionary<EstadoConversa, string>
+    {
+        { EstadoConversa.Introducao, "Olá, somos comerciantes buscando ajuda para entrar na aldeia!" },
+        { EstadoConversa.OrigemNPCs, "Somos da tribo Tuaregue, famosos por nosso comércio de especiarias." },
+        { EstadoConversa.OrigemVinda, "Viemos de uma terra distante ao norte, cruzando desertos e mares." },
+        { EstadoConversa.Proposito, "A aldeia nos baniu por mal-entendidos do passado." },
+        { EstadoConversa.AceiteMissao, "Precisamos de sua ajuda para entrar na aldeia." }
+    };
+
+    private Dictionary<EstadoConversa, (string, string)> opcoes = new Dictionary<EstadoConversa, (string, string)>
+    {
+        { EstadoConversa.Introducao, ("Quem são vocês?", "Não quero ajudar") },
+        { EstadoConversa.OrigemNPCs, ("De onde vocês vieram?", "Entendo, não posso ajudar") },
+        { EstadoConversa.OrigemVinda, ("Por que não podem entrar na aldeia?", "Melhor eu ir embora") },
+        { EstadoConversa.Proposito, ("Posso ajudar!", "Não ajudarei") }
+    };
+
+    private IEnumerator ResetDebounce()
+    {
+        yield return new WaitForSeconds(0.5f);
+        debounce = false;
+    }
+
 }
