@@ -1,14 +1,24 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.UI; // Não esqueça de incluir para trabalhar com UI
 
 public class PlayerInteracao : MonoBehaviour
 {
     private GameObject objetoInteragivel;
     public GameObject botaoInteracao;
+    
+    // Componente Image do botão que exibirá o ícone
+    public Image imagemInteracao;
+
+    // Sprites dos ícones para cada tipo de interação
+    public Sprite iconeEscalada;
+    public Sprite iconeColeta;
+    public Sprite iconeQuest;
+
     private GameObject gerenciadorDeMissoes;
     private bool debounce = false;
-    private bool interagindo = false;
+    public bool interagindo = false;
     private PlayerMovimento playerMovimento;
 
     void Start()
@@ -17,12 +27,31 @@ public class PlayerInteracao : MonoBehaviour
         gerenciadorDeMissoes = GameObject.Find("GerenciadorDeMissoes");
         playerMovimento = GetComponent<PlayerMovimento>();
     }
+
     public void HandleTriggerEnter(Collider other)
     {
+        // Verifica se o objeto possui uma das tags desejadas
         if (other.CompareTag("Climb1") || other.CompareTag("Coletavel") || other.CompareTag("Quest"))
         {
             objetoInteragivel = other.gameObject;
             botaoInteracao.SetActive(true); // Exibe o botão de interação
+
+            // Atualiza o ícone de acordo com o tipo de interação
+            if (other.CompareTag("Climb1"))
+            {
+                if (imagemInteracao != null && iconeEscalada != null)
+                    imagemInteracao.sprite = iconeEscalada;
+            }
+            else if (other.CompareTag("Coletavel"))
+            {
+                if (imagemInteracao != null && iconeColeta != null)
+                    imagemInteracao.sprite = iconeColeta;
+            }
+            else if (other.CompareTag("Quest"))
+            {
+                if (imagemInteracao != null && iconeQuest != null)
+                    imagemInteracao.sprite = iconeQuest;
+            }
         }
     }
 
@@ -84,7 +113,7 @@ public class PlayerInteracao : MonoBehaviour
         missao.IniciarInteracao(objetoInteragivel);
     }
 
-    private void SairInteracao()
+    public void SairInteracao()
     {
         // Reativa o movimento do jogador
         playerMovimento.enabled = true;

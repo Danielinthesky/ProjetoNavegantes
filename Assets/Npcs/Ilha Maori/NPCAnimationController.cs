@@ -6,6 +6,10 @@ public class NPCAnimationController : MonoBehaviour
     public Transform jogador; // Referência ao jogador
     public float velocidadeRotacao = 5f; // Velocidade de rotação
     private bool interagindo = false;
+    public AudioSource audioSource1;
+    public AudioSource audioSource2;
+    public AudioClip[] heySound;
+    public AudioClip okSound;
    
 
     private void Update()
@@ -21,11 +25,13 @@ public class NPCAnimationController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Jogador"))
-        {
+        
+        {   
             interagindo = true;
             animador.SetBool("Interagindo", true); // Transição para o estado de interação     
             Debug.Log("Interagindo");
             animador.Play("Interagir State");  
+            audioSource1.PlayOneShot(heySound[Random.Range(0, heySound.Length)]);
            
         }
     }
@@ -33,7 +39,10 @@ public class NPCAnimationController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Jogador"))
-        {
+        {   
+            
+            audioSource1.PlayOneShot(okSound);
+            audioSource2.Play();
             interagindo = false;
             animador.SetBool("Interagindo", false); 
             animador.Play("Idle State");

@@ -32,8 +32,13 @@ public class PlayerController : MonoBehaviour
     public bool EstaCaindo;
     public bool EstaNaAgua;
     public bool Nadando;
+    [Header("Som")]
+    public AudioSource audioSource;
+    public AudioClip jumpSound;
+    
 
     private PlayerInput playerInput;
+    
 
     void Awake()
     {
@@ -42,6 +47,7 @@ public class PlayerController : MonoBehaviour
         movimento = GetComponent<PlayerMovimento>();
         interacao = GetComponent<PlayerInteracao>();
         navegacao = GetComponent<PlayerNavegacao>();
+        audioSource = GetComponent<AudioSource>();
 
         playerInput = GetComponent<PlayerInput>();
         Debug.Log("Action Map ativo: " + playerInput.currentActionMap.name);
@@ -93,12 +99,17 @@ public class PlayerController : MonoBehaviour
     public void OnPular(InputAction.CallbackContext contexto)
     {
     Debug.Log("Evento de pulo recebido: " + contexto.phase);
+    audioSource.PlayOneShot(jumpSound);
 
     if (contexto.performed && (EstaNoChao || EstaNaAgua))
     {   
         Debug.Log("Pulo executado");    
         interacao.HandlePular(contexto, rb, animador, movimento, forcaPulo);
         Pulando = true;
+    }
+    else if (contexto.canceled)
+    {
+        Pulando = false;
     }
     }
 
