@@ -7,11 +7,16 @@ public class NPCAnimationController : MonoBehaviour
     public float velocidadeRotacao = 5f; // Velocidade de rotação
     private bool interagindo = false;
     public AudioSource audioSource1;
-    public AudioSource audioSource2;
     public AudioClip[] heySound;
     public AudioClip okSound;
    
 
+    void Start()
+    {
+
+        audioSource1 = GetComponent<AudioSource>();
+
+    }
     private void Update()
     {
         
@@ -41,8 +46,7 @@ public class NPCAnimationController : MonoBehaviour
         if (other.CompareTag("Jogador"))
         {   
             
-            audioSource1.PlayOneShot(okSound);
-            audioSource2.Play();
+            audioSource1.PlayOneShot(okSound);           
             interagindo = false;
             animador.SetBool("Interagindo", false); 
             animador.Play("Idle State");

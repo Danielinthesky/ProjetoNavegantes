@@ -34,7 +34,8 @@ public class PrimeiraMissaoMaori : MonoBehaviour
     OrigemNPCs,
     OrigemVinda,
     Proposito,
-    AceiteMissao
+    AceiteMissao,
+    MissaoAceita
 }
 
 
@@ -54,7 +55,7 @@ public class PrimeiraMissaoMaori : MonoBehaviour
         playerInteracao = GameObject.FindWithTag("Jogador").GetComponent<PlayerInteracao>();
     }
     
-    public void IniciarInteracao(GameObject npc)
+   public void IniciarInteracao(GameObject npc)
     {
         npcAtual = npc;
 
@@ -62,6 +63,19 @@ public class PrimeiraMissaoMaori : MonoBehaviour
         cameraNPC.gameObject.SetActive(true);
         cameraJogador.gameObject.SetActive(false);
         cinemachineJogador.SetActive(false);
+        confirmarSelecao.SetActive(true);
+        botaoPular.SetActive(false);
+        botaoCorrer.SetActive(false);
+
+        // Define o estado inicial da conversa
+        if (MissaoAceita)
+        {
+            estadoAtual = EstadoConversa.MissaoAceita; // Ajusta o estado para MissaoAceita
+        }
+        else
+        {
+            estadoAtual = EstadoConversa.Introducao; // Define o estado inicial normal
+        }
 
         // Interrompe qualquer corrotina ativa e reseta o texto
         if (coroutineFala != null)
@@ -73,34 +87,57 @@ public class PrimeiraMissaoMaori : MonoBehaviour
         textoNPC.text = ""; // Limpa o texto
         painelInteracao.SetActive(true); // Ativa o painel de interação
 
-        // Decide qual fala exibir com base no estado da missão
-        if (!MissaoAceita)
-        {
-            coroutineFala = StartCoroutine(ExibirFala(falaAntesMissao));
-        }
-        else
-        {
-            coroutineFala = StartCoroutine(ExibirFala(falaDepoisMissao));
-        }
+        // Inicia o diálogo apropriado
+        coroutineFala = StartCoroutine(ExibirFala(textos[estadoAtual]));
     }
 
+
     
-    public void SairInteracao()
+    public void SairInteracao(bool chamadoPeloJogador = false)
     {
+        Debug.Log("Saindo da interação no PrimeiraMissaoMaori");
+
         estadoAtual = EstadoConversa.Introducao; // Reinicia o estado
         cameraNPC.gameObject.SetActive(false);
         cameraJogador.gameObject.SetActive(true);
         cinemachineJogador.SetActive(true);
         painelInteracao.SetActive(false);
         painelSelecao.SetActive(false);
+
+        confirmarSelecao.SetActive(false);
+        botaoPular.SetActive(true);
+        botaoCorrer.SetActive(true);
+
+        // Garante que os botões de seleção são desativados
+        botaoSim.SetActive(false);
+        botaoNao.SetActive(false);
+
+        // Se houver uma corrotina em andamento, interrompa
+        if (coroutineFala != null)
+        {
+            StopCoroutine(coroutineFala);
+            coroutineFala = null;
+        }
+
+        // Só chama o método do jogador se não foi chamado por ele
+        if (!chamadoPeloJogador)
+        {
+            var playerInteracao = GameObject.FindWithTag("Jogador").GetComponent<PlayerInteracao>();
+            if (playerInteracao != null)
+            {
+                playerInteracao.SairInteracao(true); // Passa true para evitar recursão
+            }
+        }
     }
+
+
+
 
 
 
     public void AceitarMissao()
     {
-        Debug.Log("Missão aceita!");
-        MissaoAceita = true; // Define que a missão foi aceita
+        
 
         // Fecha o painel e retorna à câmera do jogador
         painelInteracao.SetActive(false);
@@ -145,22 +182,25 @@ public class PrimeiraMissaoMaori : MonoBehaviour
         botaoNao.GetComponent<Image>().color = selecaoAtual == 1 ? Color.yellow : Color.white;
     }
 
-    public void ConfirmarSelecao()
+    public void ConfirmarSelecao(InputAction.CallbackContext contexto)
     {
-        if (debounce) return; // Evita seleção dupla automática
-
-        debounce = true; // Agora o debounce realmente funciona
-        StartCoroutine(ResetDebounce());
-
-        if (selecaoAtual == 0) // Opção A -> Avança no fluxo correto
+        if (contexto.performed) // Executa somente quando a tecla "F" é pressionada
         {
-            AvancarConversa();
-        }
-        else // Opção B -> Sai da interação e reseta
-        {
-            SairInteracao();
+            if (debounce) return; // Evita seleção dupla
+            debounce = true;
+            StartCoroutine(ResetDebounce());
+
+            if (selecaoAtual == 0) // Sim
+            {
+                AvancarConversa();
+            }
+            else // Não
+            {
+                SairInteracao();
+            }
         }
     }
+
 
 
     private void AvancarConversa()
@@ -177,7 +217,11 @@ public class PrimeiraMissaoMaori : MonoBehaviour
                 estadoAtual = EstadoConversa.Proposito;
                 break;
             case EstadoConversa.Proposito:
-                AceitarMissao();
+                Debug.Log("Missão aceita!");
+                MissaoAceita = true; // Define que a missão foi aceita
+                break;
+            case EstadoConversa.MissaoAceita:
+            AceitarMissao();
                 return;
         }
 
@@ -238,9 +282,10 @@ public class PrimeiraMissaoMaori : MonoBehaviour
     {
         { EstadoConversa.Introducao, "Olá, somos comerciantes buscando ajuda para entrar na aldeia!" },
         { EstadoConversa.OrigemNPCs, "Somos da tribo Tuaregue, famosos por nosso comércio de especiarias." },
-        { EstadoConversa.OrigemVinda, "Viemos de uma terra distante ao norte, cruzando desertos e mares." },
-        { EstadoConversa.Proposito, "A aldeia nos baniu por mal-entendidos do passado." },
-        { EstadoConversa.AceiteMissao, "Precisamos de sua ajuda para entrar na aldeia." }
+        { EstadoConversa.OrigemVinda, "Viemos de uma terra distante ao norte, um continetente que atualmente é um grande deserto,ja fomos uma grande floresta atlântica, mas nao se engane, ainda temos uma boa quantidade de verde além dos mares." },
+        { EstadoConversa.Proposito, "O Lider Maori nem nos deu a chance de contar o que viemos fazer aqui, ele recusou nossar entrada e estamos aqui desde então, nao podemos ter vindo de tão longe para nada." },
+        { EstadoConversa.AceiteMissao, "Precisamos de sua ajuda para entrar na aldeia, convença o Lider Maori a pelo menos nos ouvir, temos boas intenções vindo aqui" },
+        { EstadoConversa.MissaoAceita, "Obrigado por nos ajudar, va ate o Lider Maori e tente explicar a ele que estamos aqui para tratar de relações comerciais com o continente Maori!" }
     };
 
     private Dictionary<EstadoConversa, (string, string)> opcoes = new Dictionary<EstadoConversa, (string, string)>

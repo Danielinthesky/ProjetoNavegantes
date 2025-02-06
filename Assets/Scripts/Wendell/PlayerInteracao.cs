@@ -113,19 +113,25 @@ public class PlayerInteracao : MonoBehaviour
         missao.IniciarInteracao(objetoInteragivel);
     }
 
-    public void SairInteracao()
+    public void SairInteracao(bool chamadoPelaMissao = false)
     {
+        Debug.Log("Saindo da interação no PlayerInteracao");
+
         // Reativa o movimento do jogador
         playerMovimento.enabled = true;
         interagindo = false;
 
-        // Oculta o painel e reativa a câmera do jogador
-        PrimeiraMissaoMaori missao = gerenciadorDeMissoes.GetComponent<PrimeiraMissaoMaori>();
-        if (missao != null)
+        // Só chama o método de PrimeiraMissaoMaori se não foi chamado por ele
+        if (!chamadoPelaMissao)
         {
-            missao.SairInteracao();
+            PrimeiraMissaoMaori missao = gerenciadorDeMissoes.GetComponent<PrimeiraMissaoMaori>();
+            if (missao != null)
+            {
+                missao.SairInteracao(true); // Passa true para evitar recursão
+            }
         }
     }
+
 
     public void HandlePular(InputAction.CallbackContext contexto, Rigidbody rb, Animator animador, PlayerMovimento movimento, float forcaPulo)
     {
